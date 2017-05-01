@@ -1,0 +1,30 @@
+{
+    "name": "treehouse",
+    "version": "0.0.1",
+    "description": "NodeJS project using ExpressJS to create an easy, secure and customisable API layer",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha --reporter spec"
+    },
+    "engines": {
+        "node": ">=4.2.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/knor-el-snor/treehouse.git"
+    },
+    "keywords": [
+        "NodeJS",
+        "ExpressJS",
+        "Treehouse",
+        "API",
+        "Secure",
+        "Customisable"
+    ],
+    "author": "Brent Van Geertruy <brentvangeertruy@outlook.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/knor-el-snor/treehouse/issues"
+    },
+    "homepage": "https://github.com/knor-el-snor/treehouse#readme"
+}
