@@ -19,7 +19,7 @@ import BaseAuthentication from './lib/base/BaseAuthentication';
 // Authentication
 import PassportAuthentication from './lib/authentication/PassportAuthentication';
 
-class Combro {
+class TreeHouse {
     constructor(configuration = DEFAULT_CONFIG) {
         this.configuration = configuration;
         this.router = new Router();
@@ -153,7 +153,7 @@ class Combro {
      * Start up ExpressJS server
      */
     fireUpEngines() {
-        this.app.listen(this.configuration.port, () => console.log(`Combro NodeJS Server listening on port ${this.configuration.port}`));
+        this.app.listen(this.configuration.port, () => console.log(`TreeHouse NodeJS Server listening on port ${this.configuration.port}`));
     }
 
     /**
@@ -171,7 +171,7 @@ class Combro {
  * Export all exposed variables
  */
 module.exports = {
-    Combro,
+    TreeHouse,
     Route,
     BaseController,
     BaseError,
