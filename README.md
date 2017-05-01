@@ -5,7 +5,7 @@ NodeJS project using ExpressJS to create an easy, secure and customisable API la
 
 ## Installation
 
-  `npm install treehouse`
+  `npm install tree-house`
 
 ## Usage
 

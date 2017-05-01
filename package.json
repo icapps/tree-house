@@ -4,7 +4,8 @@
   "description": "NodeJS project using ExpressJS to create an easy, secure and customisable API layer",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "node_modules/.bin/mocha --reporter spec",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*"
   },
   "engines": {
     "node": ">=4.2.4"
@@ -29,5 +30,10 @@
   "homepage": "https://github.com/knor-el-snor/tree-house#readme",
   "directories": {
     "test": "test"
+  },
+  "devDependencies": {
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.3.0"
   }
 }
