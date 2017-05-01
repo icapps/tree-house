@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/knor-el-snor/tree-house.svg?branch=master)](https://travis-ci.org/knor-el-snor/tree-house)
+[![Coverage Status](https://coveralls.io/repos/github/knor-el-snor/tree-house/badge.svg)](https://coveralls.io/github/knor-el-snor/tree-house)
+
 Treehouse
 =========
 
