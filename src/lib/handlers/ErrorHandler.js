@@ -1,5 +1,4 @@
 export default class ErrorHandler {
-
     /**
      * Pass an Error to an Express response
      * @param {any} res
