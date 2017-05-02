@@ -12,11 +12,11 @@ export function getHashedPassword(password) {
 /**
  * compare user password hash with unhashed password
  * @param password
- * @param user
+ * @param hashedPw
  * @returns {*}
  */
-export function comparePassword(password, user) {
-    return bcrypt.compareSync(password, user.password);
+export function comparePassword(password, hashedPw) {
+    return bcrypt.compareSync(password, hashedPw);
 }
 
 /**

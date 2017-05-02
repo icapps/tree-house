@@ -19,6 +19,9 @@ import BaseAuthentication from './lib/base/BaseAuthentication';
 // Authentication
 import PassportAuthentication from './lib/authentication/PassportAuthentication';
 
+// Helpers
+import * as Cipher from './lib/helpers/Cipher';
+
 class TreeHouse {
     constructor(configuration = DEFAULT_CONFIG) {
         this.configuration = configuration;
@@ -179,4 +182,5 @@ module.exports = {
     BaseService,
     BaseAuthentication,
     PassportAuthentication,
+    Cipher,
 };

@@ -8,7 +8,7 @@
     "start": "npm run build && node build/index.js",
     "prepublish": "npm run build",
     "lint": "node_modules/.bin/eslint ./ --cache --config ./.eslintrc --ignore-pattern .gitignore",
-    "test": "npm run build && node_modules/.bin/mocha --require babel-core/register --reporter spec",
+    "test": "./node_modules/.bin/_mocha test/*.js --require babel-core/register --reporter spec",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test/*.js -- --require babel-register"
   },
   "precommit": [
