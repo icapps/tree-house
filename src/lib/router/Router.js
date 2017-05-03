@@ -34,4 +34,15 @@ export default class Router {
         // set express routes and policies
         this.setExpressRoutes(this.routes);
     }
+
+    /**
+     * Return all defined routes
+     *
+     * @returns {Array}
+     *
+     * @memberof Router
+     */
+    getRoutes() {
+        return this.routes;
+    }
 }

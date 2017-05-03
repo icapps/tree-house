@@ -36,7 +36,8 @@ describe('Initialise things before running application', () => {
 
         it('Create new routes from controller', () => {
             routes = [
-                new Route('GET', '/currentUser', mockController.sendUser.bind(mockController), [MockPolicy]),
+                new Route('POST', '/login', mockController.login.bind(mockController)),
+                new Route('GET', '/user', mockController.getUser.bind(mockController), [MockPolicy]),
                 new Route('GET', '/serverError', mockController.sendServerError.bind(mockController)),
                 new Route('GET', '/unauthorised', mockController.sendUnauthorised.bind(mockController)),
                 new Route('GET', '/badRequest', mockController.sendBadRequest.bind(mockController)),
@@ -50,12 +51,20 @@ describe('New instance of a TreeHouse server', () => {
         it('Create new instance with the provided configuration', () => {
             newApplication = new TreeHouse(CONFIGURATION);
             newApplication.configuration.should.equal(CONFIGURATION);
+            return expect(newApplication.router).not.to.be.empty;
         });
 
         it('Create Passport authentication', () => {
-            authentication = new PassportAuthentication(localStrategyConfig, jwtStrategyConfig);
-            authentication.setLocalStrategy(onLocalStrategy);
-            authentication.setJwtStrategy(onJwtStrategy);
+            authentication = new PassportAuthentication();
+        });
+
+        it('Get JWT token without proper configuration', () => {
+            expect(authentication.getJwtToken.bind(user)).to.throw(Error);
+        });
+
+        it('Set passport configuration', () => {
+            authentication.setLocalStrategy(localStrategyConfig, onLocalStrategy);
+            authentication.setJwtStrategy(jwtStrategyConfig, onJwtStrategy);
 
             webtoken = authentication.getJwtToken(user);
             return expect(webtoken).not.to.be.empty;
@@ -63,13 +72,17 @@ describe('New instance of a TreeHouse server', () => {
 
         it('Set Routes', () => {
             newApplication.setRoutes(routes);
+            return expect(newApplication.router.getRoutes()).not.to.be.empty;
         });
 
         it('Set Authentication', () => {
             newApplication.setAuthentication(authentication);
+            return expect(newApplication.authentication).not.to.be.empty;
         });
 
         it('Fire up the application', () => {
+            // Export the main application instance
+            module.exports.main = newApplication;
             newApplication.fireUpEngines();
         });
     });
@@ -82,29 +95,37 @@ describe('New instance of a TreeHouse server', () => {
     });
 
     describe('API Calls', () => {
-        it('Get the unauthorized response', (done) => {
-            mockRequest.get('/unauthorised')
-                .expect(401)
-                .end((err) => {
+        it('Login with our user', (done) => {
+            mockRequest.post('/login')
+                .send({ email: user.email, password: user.password })
+                .expect(200)
+                .end((err, res) => {
                     if (err) return done(err);
+                    webtoken = res.body.token;
+                    expect(webtoken).not.to.be.empty;
                     return done();
                 });
+        });
+        it('Get current user via authenticated call (JWT in headers)', (done) => {
+            mockRequest.get('/user')
+                .set('Authorization', `JWT ${webtoken}`)
+                .expect(200, done);
+        });
+        it('Get current user via unauthenticated call (NO JWT in headers)', (done) => {
+            mockRequest.get('/user')
+                .expect(401, done);
+        });
+        it('Get the unauthorized response', (done) => {
+            mockRequest.get('/unauthorised')
+                .expect(401, done);
         });
         it('Get the BadRequest response', (done) => {
             mockRequest.get('/badRequest')
-                .expect(400)
-                .end((err) => {
-                    if (err) return done(err);
-                    return done();
-                });
+                .expect(400, done);
         });
         it('Get the serverError response', (done) => {
             mockRequest.get('/serverError')
-                .expect(500)
-                .end((err) => {
-                    if (err) return done(err);
-                    return done();
-                });
+                .expect(500, done);
         });
     });
 });

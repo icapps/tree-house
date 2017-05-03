@@ -1,11 +1,15 @@
 import { BaseController, BaseService, BasePolicy } from '../../src/index';
+import { main } from '../start.test';
 
 export class MockPolicy extends BasePolicy {
     setPolicy() {
-        return new Promise((resolve) => {
-            Object.assign(this.req, { session: { me: { isAuthenticated: true } } });
-            resolve();
-        });
+        return main.getAuthentication().authenticate(this.req, 'jwt')
+            .then((user) => {
+                if (!user) throw new this.Unauthorised();
+                Object.assign(this.req, { session: { me: user } });
+
+                return user;
+            });
     }
 }
 
@@ -17,8 +21,12 @@ export class MockPolicy extends BasePolicy {
  * @extends {BaseService}
  */
 export class MockService extends BaseService {
-    sendUser(req, res) {
-        return this.execute(res, this.userService.getCurrentUser(req.session.me));
+    login(req) {
+        return main.getAuthentication().authenticate(req)
+    }
+
+    getUser(currentUser) {
+        return Promise.resolve({ user: currentUser });
     }
 
     sendServerError() {
@@ -47,8 +55,12 @@ export class MockController extends BaseController {
         this.mockService = new MockService();
     }
 
-    sendUser(currentUser) {
-        return Promise.resolve({ user: currentUser });
+    login(req, res) {
+        return this.execute(res, this.mockService.login(req));
+    }
+
+    getUser(req, res) {
+        return this.execute(res, this.mockService.getUser(req.session.me));
     }
 
     sendServerError(req, res) {

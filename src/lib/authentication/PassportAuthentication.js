@@ -8,18 +8,18 @@ import { createWebtoken } from '../helpers/Cipher';
 
 
 export default class PassportAuthentication extends BaseAuthentication {
-    constructor(localConfig = DEF_LOCAL, jwtConfig = DEF_JWT) {
-        super();
-        this.setJWTConfiguration(localConfig, jwtConfig);
-    }
 
     /**
      * Expects a function with first parameters inputfields, and second callback function
      * @param {any} fn
      * @memberOf PassportAuthenticaton
      */
-    setLocalStrategy(fn) {
-        this.onJwtStrategy = fn;
+    setLocalStrategy(localConfig = DEF_LOCAL, fn) {
+        this.localStrategyConfig = Object.assign({}, localConfig, {
+            passReqToCallback: false,
+        });
+
+        passport.use(new LocalStrategy(this.localStrategyConfig, fn));
     }
 
     /**
@@ -27,29 +27,7 @@ export default class PassportAuthentication extends BaseAuthentication {
      * @param {any} fn
      * @memberOf PassportAuthenticaton
      */
-    setJwtStrategy(fn) {
-        this.onLocalStrategy = fn;
-    }
-
-    /**
-     * Set both local and JWT configuration via passport
-     *
-     * @param {any} localConfig
-     * @param {any} jwtConfig
-     *
-     * @memberOf PassportAuthenticaton
-     */
-    setJWTConfiguration(localConfig, jwtConfig) {
-        // Set local configuration object
-        this.localStrategyConfig = Object.assign({}, localConfig, {
-            passReqToCallback: false,
-        });
-
-        if (this.onLocalStrategy) {
-            passport.use(new LocalStrategy(this.localStrategyConfig, this.onLocalStrategy));
-        }
-
-        // Set JWT configuration object
+    setJwtStrategy(jwtConfig = DEF_JWT, fn) {
         this.jwtStrategyConfig = Object.assign({}, jwtConfig, {
             jwtFromRequest: ExtractJwt.fromAuthHeader(),
             secretOrKey: jwtConfig.secret,
@@ -57,9 +35,7 @@ export default class PassportAuthentication extends BaseAuthentication {
             passReqToCallback: false,
         });
 
-        if (this.onJwtStrategy) {
-            passport.use(new JwtStrategy(this.jwtStrategyConfig, this.onJwtStrategy));
-        }
+        passport.use(new JwtStrategy(this.jwtStrategyConfig, fn));
     }
 
     /**

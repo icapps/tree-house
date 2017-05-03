@@ -1,3 +1,5 @@
+import { main } from '../start.test';
+
 export const localStrategyConfig = {
     usernameField: 'email',
     passwordField: 'password',
@@ -13,13 +15,15 @@ export const jwtStrategyConfig = {
 };
 
 export function onLocalStrategy(email, password, next) {
-    if (email && password) {
-        next();
+    if (email && (password === 'notSoRandom')) {
+        // Get JWT token from authentication on the main application
+        const token = main.getAuthentication().getJwtToken({ email, password });
+        next(null, { token });
     }
 }
 
 export function onJwtStrategy(payload, next) {
-    if (payload.user.id) {
-        next();
+    if (payload.user) {
+        next(null, { isAuthenticated: true });
     }
 }

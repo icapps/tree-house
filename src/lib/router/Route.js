@@ -28,7 +28,6 @@ export default class Route {
                 try {
                     this.fn(req, res);
                 } catch (error) {
-                    console.log(error);
                     this.errorHandler.execute(res, error);
                 }
             });
