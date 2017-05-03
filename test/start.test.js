@@ -12,7 +12,7 @@ should();
 const CONFIGURATION = {
     port: 5000,
     bodyLimit: '10mb',
-    apiKey: 'ga9ul2!MN36nyh64z4d5SC70jv-YJV:c0XzN8be}_I24j0qYjs*%zCb01CaHCm6U_S',
+    apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
     basePath: process.env.BASE_PATH || '/api/v1',
 };
 const user = {
@@ -102,6 +102,7 @@ describe('New instance of a TreeHouse server', () => {
                 .end((err, res) => {
                     if (err) return done(err);
                     webtoken = res.body.token;
+                    /* eslint-disable no-unused-expressions */
                     expect(webtoken).not.to.be.empty;
                     return done();
                 });

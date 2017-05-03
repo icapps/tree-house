@@ -6,9 +6,7 @@ export class MockPolicy extends BasePolicy {
         return main.getAuthentication().authenticate(this.req, 'jwt')
             .then((user) => {
                 if (!user) throw new this.Unauthorised();
-                Object.assign(this.req, { session: { me: user } });
-
-                return user;
+                return Object.assign(this.req, { session: { me: user } });
             });
     }
 }
@@ -22,7 +20,7 @@ export class MockPolicy extends BasePolicy {
  */
 export class MockService extends BaseService {
     login(req) {
-        return main.getAuthentication().authenticate(req)
+        return main.getAuthentication().authenticate(req);
     }
 
     getUser(currentUser) {

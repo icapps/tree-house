@@ -32,7 +32,7 @@ class TreeHouse {
 
     /**
      * Intialise all ExpressJS configuration needed for the application to run
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     initExpressJS() {
         this.app = express();
@@ -45,7 +45,7 @@ class TreeHouse {
 
     /**
      * Set process environment variables
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setEnvironmentVariables() {
         process.env.apiKey = this.configuration.apiKey;
@@ -53,7 +53,7 @@ class TreeHouse {
 
     /**
      * Set body parser configuration
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setBodyParser() {
         this.app.use(bodyParser.json({ limit: this.configuration.bodyLimit }));
@@ -62,7 +62,7 @@ class TreeHouse {
 
     /**
      * Set some header properties, especially needed for development
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setHeaders() {
         // Add headers
@@ -79,7 +79,7 @@ class TreeHouse {
 
     /**
      * Set the express router instance of our router to the base path
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setRouter() {
         this.app.use('/', this.router.expressRouter);
@@ -88,7 +88,7 @@ class TreeHouse {
     /**
      * Set all routes provided
      * @param {any} routes
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setRoutes(routes) {
         this.router.setRoutes(routes);
@@ -97,7 +97,7 @@ class TreeHouse {
     /**
      * Return the Authentication if properly set
      * @returns Authentication
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     getAuthentication() {
         if (this.authentication) {
@@ -113,7 +113,7 @@ class TreeHouse {
      * Set the authentication
      * This needs to be a member of BaseAuthentication to properly function
      * @param {any} authentication
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setAuthentication(authentication) {
         this.authentication = authentication;
@@ -121,7 +121,7 @@ class TreeHouse {
 
     /**
      * Set the port the ExpressJS server will run on
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     // TODO: Implement https
     setPort() {
@@ -163,7 +163,7 @@ class TreeHouse {
      * Set the configuration
      * The configuration can be provided via the constructor or this method afterwards
      * @param {any} newConfiguration
-     * @memberOf Combro
+     * @memberOf TreeHouse
      */
     setConfiguration(newConfiguration) {
         this.configuration = newConfiguration;
