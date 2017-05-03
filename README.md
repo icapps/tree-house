@@ -11,7 +11,7 @@ NodeJS project using ExpressJS to create an easy, secure and customisable API la
   `npm install tree-house`
 
 ## Usage
-
+Documentation in progress, coming as soon as possible!
 
 ## Tests
 
