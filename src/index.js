@@ -1,5 +1,9 @@
 import express from 'express';
+import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 
 // TODO: Convert into build task exporting all proper functions/variables
 // Constants
@@ -36,11 +40,11 @@ class TreeHouse {
      */
     initExpressJS() {
         this.app = express();
+        this.setSecurity();
         this.setBodyParser();
         this.setHeaders();
         this.setRouter();
         this.setErrorHandling();
-        this.setPort();
     }
 
     /**
@@ -58,6 +62,10 @@ class TreeHouse {
     setBodyParser() {
         this.app.use(bodyParser.json({ limit: this.configuration.bodyLimit }));
         this.app.use(bodyParser.urlencoded({ extended: true, limit: this.configuration.bodyLimit }));
+    }
+
+    setSecurity() {
+        this.app.use(helmet());
     }
 
     /**
@@ -95,6 +103,26 @@ class TreeHouse {
     }
 
     /**
+     * Get HTTPS credentials
+     * Read out the private key and certificate
+     * @returns
+     *
+     * @memberof TreeHouse
+     */
+    getHttpsCredentials() {
+        if (this.configuration.https.privateKey && this.configuration.https.certificate) {
+            try {
+                const privateKey = fs.readFileSync(this.configuration.https.privateKey, 'utf8');
+                const certificate = fs.readFileSync(this.configuration.https.certificate, 'utf8');
+                return { key: privateKey, cert: certificate };
+            } catch (e) {
+                throw new Error(e);
+            }
+        }
+        throw new Error('No private key and/or certificate required for HTTPS server');
+    }
+
+    /**
      * Return the Authentication if properly set
      * @returns Authentication
      * @memberOf TreeHouse
@@ -117,15 +145,6 @@ class TreeHouse {
      */
     setAuthentication(authentication) {
         this.authentication = authentication;
-    }
-
-    /**
-     * Set the port the ExpressJS server will run on
-     * @memberOf TreeHouse
-     */
-    // TODO: Implement https
-    setPort() {
-        this.app.set('port', this.configuration.port);
     }
 
     setErrorHandling() {
@@ -156,7 +175,16 @@ class TreeHouse {
      * Start up ExpressJS server
      */
     fireUpEngines() {
-        this.app.listen(this.configuration.port, () => console.log(`TreeHouse NodeJS Server listening on port ${this.configuration.port}`));
+        const httpServer = http.createServer(this.app);
+        httpServer.listen(this.configuration.port);
+        console.log(`TreeHouse HTTP NodeJS Server listening on port ${this.configuration.port}`);
+
+        // HTTPS - Optional
+        if (this.configuration.https) {
+            const httpsServer = https.createServer(this.getHttpsCredentials(), this.app);
+            httpsServer.listen(this.configuration.https.port);
+            console.log(`TreeHouse HTTPS NodeJS Server listening on port ${this.configuration.https.port}`);
+        }
     }
 
     /**
