@@ -44,7 +44,6 @@ class TreeHouse {
         this.setBodyParser();
         this.setHeaders();
         this.setRouter();
-        this.setErrorHandling();
     }
 
     /**
@@ -145,30 +144,6 @@ class TreeHouse {
      */
     setAuthentication(authentication) {
         this.authentication = authentication;
-    }
-
-    setErrorHandling() {
-        // TODO: Properly implement
-        // catch 404 and forward to error handler
-        this.app.use((req, res, next) => {
-            const err = new Error('Not Found');
-            err.status = 404;
-            next(err);
-        });
-
-        // TODO: Properly implement
-        // error handler
-        this.app.use((err, req, res) => {
-            // set locals, only providing error in development
-            Object.assign(res.locals, {
-                message: err.message,
-                error: req.app.get('env') === 'development' ? err : {},
-            });
-
-            // render the error page
-            res.status(err.status || 500);
-            res.render('error');
-        });
     }
 
     /**
