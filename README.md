@@ -155,14 +155,16 @@ const jwtStrategyConfig = {
     authScheme: 'X-Session-Id',
 };
 
-// Implement own logic for local authorisation
-function onLocalStrategy(email, password, next) {
-    next(null, JwtToken );
+// Implement own logic for local authorisation - must return a Promise
+function onLocalStrategy(email, password) { 
+     // Own authentication logic...
+     return Promise.resolve(jwtToken);
 }
 
-// Implement own logic for authorisation via JWT
-function onJwtStrategy(payload, next) {
-    next(null, userData);}
+// Implement own logic for authorisation via JWT - must return a Promise
+function onJwtStrategy(payload) {
+    // Own authentication logic...
+    return Promise.resolve(userData);
 }
 ```
 > The next function expects an error as first parameter and the response as second parameter
