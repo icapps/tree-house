@@ -14,16 +14,22 @@ export const jwtStrategyConfig = {
     authScheme: 'X-Session-Id',
 };
 
-export function onLocalStrategy(email, password, next) {
-    if (email && (password === 'notSoRandom')) {
-        // Get JWT token from authentication on the main application
-        const token = main.getAuthentication().getJwtToken({ email, password });
-        next(null, { token });
-    }
+export function onLocalStrategy(email, password) {
+    return new Promise((resolve, reject) => {
+        if (email && (password === 'notSoRandom')) {
+            // Get JWT token from authentication on the main application
+            const token = main.getAuthentication().getJwtToken({ email, password });
+            return resolve({ token });
+        }
+        return reject('Local strategy: not authorised');
+    });
 }
 
-export function onJwtStrategy(payload, next) {
-    if (payload.user) {
-        next(null, { isAuthenticated: true });
-    }
+export function onJwtStrategy(payload) {
+    return new Promise((resolve, reject) => {
+        if (payload.user) {
+            return resolve({ isAuthenticated: true });
+        }
+        return reject('Local strategy: not authorised');
+    });
 }

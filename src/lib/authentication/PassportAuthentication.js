@@ -19,8 +19,14 @@ export default class PassportAuthentication extends BaseAuthentication {
             passReqToCallback: false,
         });
 
-        passport.use(new LocalStrategy(this.localStrategyConfig, fn));
+        // Convert the callback function needed to a function returning a Promise
+        passport.use(new LocalStrategy(this.localStrategyConfig, (email, password, next) => {
+            fn(email, password)
+                .then(result => next(null, result))
+                .catch(error => next(error, null));
+        }));
     }
+
 
     /**
      * Expects a function with first parameter payload, and second callback function
@@ -35,7 +41,12 @@ export default class PassportAuthentication extends BaseAuthentication {
             passReqToCallback: false,
         });
 
-        passport.use(new JwtStrategy(this.jwtStrategyConfig, fn));
+        // Convert the callback function needed to a function returning a Promise
+        passport.use(new JwtStrategy(this.jwtStrategyConfig, (payload, next) => {
+            fn(payload)
+                .then(result => next(null, result))
+                .catch(error => next(error, null));
+        }));
     }
 
     /**
@@ -65,6 +76,7 @@ export default class PassportAuthentication extends BaseAuthentication {
         return new Promise((resolve, reject) => {
             passport.authenticate(type, (error, user) => {
                 if (error) return reject(error);
+                else if (!user) return reject('User not found');
                 return resolve(user);
             })(req);
         });

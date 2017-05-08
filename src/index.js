@@ -1,9 +1,9 @@
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import fs from 'fs';
 import http from 'http';
 import https from 'https';
+import fs from 'fs';
 
 // TODO: Convert into build task exporting all proper functions/variables
 // Constants
@@ -109,6 +109,7 @@ class TreeHouse {
      * @memberof TreeHouse
      */
     getHttpsCredentials() {
+        console.log(this.configuration);
         if (this.configuration.https.privateKey && this.configuration.https.certificate) {
             try {
                 const privateKey = fs.readFileSync(this.configuration.https.privateKey, 'utf8');
@@ -117,8 +118,9 @@ class TreeHouse {
             } catch (e) {
                 throw new Error(e);
             }
+        } else {
+            throw new Error('No private key and/or certificate found required for HTTPS server');
         }
-        throw new Error('No private key and/or certificate required for HTTPS server');
     }
 
     /**

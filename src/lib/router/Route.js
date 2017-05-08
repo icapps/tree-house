@@ -45,13 +45,7 @@ export default class Route {
             this.policies.forEach((Policy) => {
                 router.use(`${BASE_PATH}${this.url}`, (req, res, next) => {
                     const policy = new Policy(req, res, next);
-
-                    // Try to execute policy function and handle any thrown errors
-                    try {
-                        policy.execute();
-                    } catch (error) {
-                        this.errorHandler.execute(res, error);
-                    }
+                    policy.execute();
                 });
             });
         } else {

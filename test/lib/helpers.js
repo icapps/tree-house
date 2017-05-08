@@ -1,13 +1,37 @@
-import { BaseController, BaseService, BasePolicy } from '../../src/index';
+import { BaseController, BaseService, BasePolicy, BaseAuthentication } from '../../src/index';
 import { main } from '../start.test';
 
+
+/**
+ * An authentication class with just its super class methods and variables
+ * @export
+ * @class BaseMockAuthentication
+ * @extends {BaseAuthentication}
+ */
+export class BaseMockAuthentication extends BaseAuthentication {}
+
+/**
+ * A policy class with just its super class methods and variables
+ * @export
+ * @class BaseMockPolicy
+ * @extends {BasePolicy}
+ */
+export class BaseMockPolicy extends BasePolicy {}
+
+
+/**
+ * A basic policy using the provided authentication method
+ *
+ * @export
+ * @class MockPolicy
+ * @extends {BasePolicy}
+ */
 export class MockPolicy extends BasePolicy {
     setPolicy() {
-        return main.getAuthentication().authenticate(this.req, 'jwt')
-            .then((user) => {
-                if (!user) throw new this.Unauthorised();
-                return Object.assign(this.req, { session: { me: user } });
-            });
+        return main.getAuthentication()
+            .authenticate(this.req, 'jwt')
+            .then(user => Object.assign(this.req, { session: { me: user } }))
+            .catch(() => { throw new this.Unauthorised(); });
     }
 }
 
@@ -20,7 +44,10 @@ export class MockPolicy extends BasePolicy {
  */
 export class MockService extends BaseService {
     login(req) {
-        return main.getAuthentication().authenticate(req);
+        return main.getAuthentication()
+            .authenticate(req)
+            .then(user => user)
+            .catch(() => { throw new this.Unauthorised('Password and/or emaiul are wrong'); });
     }
 
     getUser(currentUser) {

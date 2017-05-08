@@ -3,5 +3,7 @@ export default class BaseAuthentication {
      * Authenticate the current user
      * @memberOf BaseAuthentication
      */
-    authenticate() {}
+    authenticate() {
+        return Promise.resolve();
+    }
 }

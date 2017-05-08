@@ -3,7 +3,7 @@ import supertest from 'supertest';
 
 import { TreeHouse, PassportAuthentication, Cipher, Route } from '../src/index';
 import { localStrategyConfig, jwtStrategyConfig, onLocalStrategy, onJwtStrategy } from './lib/authentication.config';
-import { MockController, MockPolicy } from './lib/helpers';
+import { MockController, MockPolicy, BaseMockAuthentication, BaseMockPolicy } from './lib/helpers';
 
 // Chai init
 should();
@@ -94,6 +94,23 @@ describe('New instance of a TreeHouse server', () => {
         });
     });
 
+    describe('Custom Router and Policies', () => {
+        it('Set a route manually without express router set', () => { expect(new Route().setRoute).to.throw(Error); });
+        it('Set policies manually without express router set', () => { expect(new Route().setPolicies).to.throw(Error); });
+    });
+
+    describe('Custom bare extending classes', () => {
+        it('Extend BaseAuthentication', () => {
+            new BaseMockAuthentication().authenticate()
+                .then(result => expect(result).to.be.resolved);
+        });
+
+        it('Extend BasePolicy', () => {
+            new BaseMockPolicy().setPolicy()
+                .then(result => expect(result).to.be.resolved);
+        });
+    });
+
     describe('API Calls', () => {
         it('Login with our user', (done) => {
             mockRequest.post('/login')
@@ -107,10 +124,20 @@ describe('New instance of a TreeHouse server', () => {
                     return done();
                 });
         });
+        it('Login with invalid user', (done) => {
+            mockRequest.post('/login')
+                .send({ email: user.email, password: 'fakePassword' })
+                .expect(401, done);
+        });
         it('Get current user via authenticated call (JWT in headers)', (done) => {
             mockRequest.get('/user')
                 .set('Authorization', `JWT ${webtoken}`)
                 .expect(200, done);
+        });
+        it('Get current user via unauthenticated call (Invalid JWT in headers)', (done) => {
+            mockRequest.get('/user')
+                .set('Authorization', 'JWT FAKE_JWT123')
+                .expect(401, done);
         });
         it('Get current user via unauthenticated call (NO JWT in headers)', (done) => {
             mockRequest.get('/user')

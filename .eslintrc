@@ -39,6 +39,6 @@
     "expect": false,
     "nock": false,
     "request": false,
-    "process": true,
+    "process": true
   }
 }
