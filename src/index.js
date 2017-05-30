@@ -22,8 +22,8 @@ import BaseAuthentication from './lib/base/BaseAuthentication';
 import BaseDatabase from './lib/base/BaseDatabase';
 
 // Authentication
-import * as Cipher from './lib/authentication/Cipher';
-import PassportAuthentication from './lib/authentication/PassportAuthentication';
+import * as Cipher from './blocks/authentication/Cipher';
+import PassportAuthentication from './blocks/authentication/PassportAuthentication';
 
 class TreeHouse {
     constructor(configuration = DEFAULT_CONFIG) {

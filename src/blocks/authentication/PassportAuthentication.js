@@ -2,8 +2,8 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 
-import { DEFAULT_LOCAL_STRATEGY_CONFIG as DEF_LOCAL, DEFAULT_JWT_CONFIG as DEF_JWT } from '../constants';
-import BaseAuthentication from '../base/BaseAuthentication';
+import { DEFAULT_LOCAL_STRATEGY_CONFIG as DEF_LOCAL, DEFAULT_JWT_CONFIG as DEF_JWT } from '../../lib/constants';
+import BaseAuthentication from '../../lib/base/BaseAuthentication';
 import { createWebtoken } from './Cipher';
 
 

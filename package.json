@@ -15,9 +15,9 @@
     "lint"
   ],
   "dependencies": {
-    "ascii-art": "^1.4.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.16.0",
+    "bunyan": "^1.8.10",
     "express": "~4.14.1",
     "helmet": "^3.6.0",
     "http": "0.0.0",
