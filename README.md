@@ -23,6 +23,7 @@ NodeJS project using ExpressJS to create an easy, secure and customisable API la
 | bodyLimit     | Limit used for body-parser      |   10mb |
 | apiKey | An api key mapped to `process.env` to use throughout the application      |    ga9ul2!MN36nyh64z4d5SC70jS |
 | basePath | The base path used to access all api routes      |   `process.env.BASE_PATH || '/api/v1' ` |
+|https| Configuration if you wish to start up an https server | `false`
 
 
 #####You can create a configuration object with own preferences and set this later on. See below in *Basic Setup*.
@@ -33,6 +34,19 @@ const myOwnConfiguration = {
 	bodyLimit: '5mb',
     apiKey: 'myOwnApiKey',
     basePath: process.env.BASE_PATH || '/api',
+}
+```
+
+#####HTTPS configuration *(optional)*
+```
+myOwnConfiguration = { 
+  // Other configuration ...
+  
+  https: {
+  	certificate: 'path_to_folder/test-ssl.cert',
+ 	privateKey: 'path_to_folder/test-ssl.key',
+  	port: 5001
+  }
 }
 ```
 
@@ -71,12 +85,15 @@ export class MyController extends BaseController {
         this.myService = new MyService();      // Needed to use functions from this service
     }
 
-    getAllEmployees(req, res) {
+    getAllEmployees = (req, res) => {
         return this.execute(res, this.myService.getEmployees());
     }
 }
 
 ```
+> You need to make sure all functions declared in a controller that are being used by a route are automatically bound to the context of their Controller class by using `fnName = (req, res) => { logic here... }`. Dont't use `fn(req,res) { logic here... }`.
+
+> If you don't use this specific syntax, you won't be able to reference to `this` as the context of the `MyController` class. It will have become an instance of the `Route` class which won't allow you to call `this.execute()` or even `this.myService.getEmployees()`.
 
 #### Services
 All services need to extend from `BaseService` which provides a few custom errors with corresponding response codes you can throw at any given moment.
@@ -133,7 +150,7 @@ import { MyPolicy } from './myPolicy';
 const myController = new MyController();
             
 const myRoutes = [
-    new Route('GET', '/employees', myController.getAllEmployees.bind(myController), [MyPolicy])
+    new Route('GET', '/employees', myController.getAllEmployees, [MyPolicy])
 ```
 
 #### Authentication
