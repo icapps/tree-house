@@ -246,7 +246,7 @@ import { application } from './main';
 ```
 ## Examples
 
-  Example code is provided in the `examples` folder. It is possible they are not fully up-to-date with the latest code, but this has been placed on the roadmap to fix asap!
+Example code is provided in the `examples` folder.
   
 ## Tests
 
