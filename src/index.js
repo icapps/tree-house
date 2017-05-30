@@ -66,6 +66,16 @@ class TreeHouse {
         this.app.use(helmet());
     }
 
+    // TODO: Implement using cors module (also allow to configure per route via policy or other way...)
+    setCors() {
+
+    }
+
+    // TODO: Implement basic rate-limiting middleware (also allow to configure per route via policy or other way...)
+    setRateLimit() {
+
+    }
+
     /**
      * Set some header properties, especially needed for development
      * @memberOf TreeHouse
