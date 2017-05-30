@@ -1,4 +1,4 @@
-import { main } from '../start.test';
+import { main } from '../00-start.test';
 
 export const localStrategyConfig = {
     usernameField: 'email',

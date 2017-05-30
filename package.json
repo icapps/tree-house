@@ -8,7 +8,7 @@
     "start": "npm run build && node build/index.js",
     "prepublish": "npm run build",
     "lint": "node_modules/.bin/eslint ./ --cache --config ./.eslintrc --ignore-pattern .gitignore",
-    "test": "./node_modules/.bin/_mocha test/*.js --require babel-core/register --reporter spec",
+    "test": "./node_modules/.bin/_mocha test/*.js --require babel-core/register --reporter spec --sort",
     "cover": "./node_modules/.bin/istanbul cover -x **/examples/** ./node_modules/.bin/_mocha test/*.js -- --require babel-register"
   },
   "precommit": [
@@ -24,6 +24,7 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^7.4.0",
     "lodash": "^4.17.4",
+    "mssql": "^4.0.4",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0"
@@ -32,6 +33,7 @@
     "babel-cli": "^6.22.2",
     "babel-eslint": "^7.1.1",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
     "coveralls": "^2.13.1",
@@ -46,7 +48,7 @@
     "supertest": "^3.0.0"
   },
   "engines": {
-    "node": ">=4.2.4"
+    "node": ">=7.9.0"
   },
   "repository": {
     "type": "git",

@@ -19,12 +19,14 @@ import BaseError from './lib/base/BaseError';
 import BasePolicy from './lib/base/BasePolicy';
 import BaseService from './lib/base/BaseService';
 import BaseAuthentication from './lib/base/BaseAuthentication';
+import BaseDatabase from './lib/base/BaseDatabase';
 
 // Authentication
+import * as Cipher from './lib/authentication/Cipher';
 import PassportAuthentication from './lib/authentication/PassportAuthentication';
 
-// Helpers
-import * as Cipher from './lib/helpers/Cipher';
+// Database
+import MsSqlDatabase from './lib/database/MsSqlDatabase';
 
 class TreeHouse {
     constructor(configuration = DEFAULT_CONFIG) {
@@ -109,7 +111,6 @@ class TreeHouse {
      * @memberof TreeHouse
      */
     getHttpsCredentials() {
-        console.log(this.configuration);
         if (this.configuration.https.privateKey && this.configuration.https.certificate) {
             try {
                 const privateKey = fs.readFileSync(this.configuration.https.privateKey, 'utf8');
@@ -146,6 +147,31 @@ class TreeHouse {
      */
     setAuthentication(authentication) {
         this.authentication = authentication;
+    }
+
+    /**
+     * Return the database if properly set
+     * @returns Database
+     * @memberOf TreeHouse
+     */
+    getDatabase() {
+        if (this.database) {
+            if (this.database instanceof BaseDatabase) {
+                return this.database;
+            }
+            throw new Error('Database handler set, but does not extend from BaseAuthentication');
+        }
+        throw new Error('Database handler not set!');
+    }
+
+    /**
+     * Set the database
+     * This needs to be a member of BaseDatabase to properly function
+     * @param {any} database
+     * @memberOf TreeHouse
+     */
+    setDatabase(database) {
+        this.database = database;
     }
 
     /**
@@ -186,6 +212,8 @@ module.exports = {
     BasePolicy,
     BaseService,
     BaseAuthentication,
+    BaseDatabase,
     PassportAuthentication,
+    MsSqlDatabase,
     Cipher,
 };

@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 
 import { DEFAULT_LOCAL_STRATEGY_CONFIG as DEF_LOCAL, DEFAULT_JWT_CONFIG as DEF_JWT } from '../constants';
 import BaseAuthentication from '../base/BaseAuthentication';
-import { createWebtoken } from '../helpers/Cipher';
+import { createWebtoken } from './Cipher';
 
 
 export default class PassportAuthentication extends BaseAuthentication {

@@ -37,9 +37,7 @@ export default class Router {
 
     /**
      * Return all defined routes
-     *
      * @returns {Array}
-     *
      * @memberof Router
      */
     getRoutes() {

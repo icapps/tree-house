@@ -15,6 +15,19 @@ const CONFIGURATION = {
     apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
     basePath: process.env.BASE_PATH || '/api/v1',
 };
+
+const FULL_CONFIGURATION = {
+    port: 5000,
+    bodyLimit: '10mb',
+    apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
+    basePath: process.env.BASE_PATH || '/api/v1',
+    https: {
+        certificate: 'test/assets/test-ssl.cert',
+        privateKey: 'test/assets/test-ssl.key',
+        port: 5001,
+    },
+};
+
 const user = {
     email: 'test@treehouse.com',
     password: 'notSoRandom',
@@ -35,12 +48,14 @@ describe('Initialise things before running application', () => {
         });
 
         it('Create new routes from controller', () => {
+            const { login, getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
+
             routes = [
-                new Route('POST', '/login', mockController.login.bind(mockController)),
-                new Route('GET', '/user', mockController.getUser.bind(mockController), [MockPolicy]),
-                new Route('GET', '/serverError', mockController.sendServerError.bind(mockController)),
-                new Route('GET', '/unauthorised', mockController.sendUnauthorised.bind(mockController)),
-                new Route('GET', '/badRequest', mockController.sendBadRequest.bind(mockController)),
+                new Route('POST', '/login', login),
+                new Route('GET', '/user', getUser, [MockPolicy]),
+                new Route('GET', '/serverError', sendServerError),
+                new Route('GET', '/unauthorised', sendUnauthorised),
+                new Route('GET', '/badRequest', sendBadRequest),
             ];
         });
     });
@@ -51,6 +66,10 @@ describe('New instance of a TreeHouse server', () => {
         it('Create new instance with the provided configuration', () => {
             newApplication = new TreeHouse(CONFIGURATION);
             newApplication.configuration.should.equal(CONFIGURATION);
+
+            newApplication.setConfiguration(FULL_CONFIGURATION);
+            newApplication.configuration.should.equal(FULL_CONFIGURATION);
+            
             return expect(newApplication.router).not.to.be.empty;
         });
 

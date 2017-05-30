@@ -1,5 +1,5 @@
 import { BaseController, BaseService, BasePolicy, BaseAuthentication } from '../../src/index';
-import { main } from '../start.test';
+import { main } from '../00-start.test';
 
 
 /**
@@ -35,6 +35,7 @@ export class MockPolicy extends BasePolicy {
     }
 }
 
+
 /**
  * A service extending from BaseService
  *
@@ -47,7 +48,7 @@ export class MockService extends BaseService {
         return main.getAuthentication()
             .authenticate(req)
             .then(user => user)
-            .catch(() => { throw new this.Unauthorised('Password and/or emaiul are wrong'); });
+            .catch(() => { throw new this.Unauthorised('Password and/or email are wrong'); });
     }
 
     getUser(currentUser) {
@@ -80,23 +81,9 @@ export class MockController extends BaseController {
         this.mockService = new MockService();
     }
 
-    login(req, res) {
-        return this.execute(res, this.mockService.login(req));
-    }
-
-    getUser(req, res) {
-        return this.execute(res, this.mockService.getUser(req.session.me));
-    }
-
-    sendServerError(req, res) {
-        return this.execute(res, this.mockService.sendServerError());
-    }
-
-    sendUnauthorised(req, res) {
-        return this.execute(res, this.mockService.sendUnauthorised());
-    }
-
-    sendBadRequest(req, res) {
-        return this.execute(res, this.mockService.sendBadRequest());
-    }
+    login = (req, res) => this.execute(res, this.mockService.login(req));
+    getUser = (req, res) => this.execute(res, this.mockService.getUser(req.session.me));
+    sendServerError = (req, res) => this.execute(res, this.mockService.sendServerError());
+    sendUnauthorised = (req, res) => this.execute(res, this.mockService.sendUnauthorised());
+    sendBadRequest = (req, res) => this.execute(res, this.mockService.sendBadRequest());
 }
