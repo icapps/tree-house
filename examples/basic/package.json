@@ -1,0 +1,17 @@
+{
+  "name": "tree-house-example-basic",
+  "version": "0.1.1",
+  "description": "Tree House Example 1",
+  "main": "index.js",
+  "scripts": {
+    "build": "node_modules/.bin/babel src -d build",
+    "start": "npm run build && node build/index.js"
+  },
+  "engines": {
+    "node": ">=7.9.0"
+  },
+  "dependencies": {
+    "tree-house": "^0.1.1",
+    "babel-cli": "^6.22.2"
+  }
+}
