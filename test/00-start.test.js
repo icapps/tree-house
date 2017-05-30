@@ -69,7 +69,7 @@ describe('New instance of a TreeHouse server', () => {
 
             newApplication.setConfiguration(FULL_CONFIGURATION);
             newApplication.configuration.should.equal(FULL_CONFIGURATION);
-            
+
             return expect(newApplication.router).not.to.be.empty;
         });
 

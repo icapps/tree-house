@@ -40,17 +40,17 @@ export default class MsSqlDatabase extends BaseDatabase {
     }
 
     // TODO: Properly implement
-    get(context, valuesToGet, filters) {
+    get() {
 
     }
 
     // TODO: Properly implement
-    create(context, valuesToInsert, valuesToOutput, filters) {
+    create() {
 
     }
 
     // TODO: Properly implement
-    update(context, valuesToUpdate, valuesToOutput, filters) {
+    update() {
 
     }
 
