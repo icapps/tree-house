@@ -44,59 +44,6 @@ export default class BaseDatabase {
         return Promise.resolve(q);
     }
 
-
-    /**
-     * Used to perform an operation getting data
-     * @param {any} context
-     * @param {Array} valuesToGet
-     * @param {Object} filters
-     * @returns {Promise}
-     * @memberof BaseDatabase
-     */
-    get(context, valuesToGet, filters) {
-        return Promise.resolve({ context, valuesToGet, filters });
-    }
-
-
-    /**
-     * Used to perform an operation creating new data
-     * @param {any} context
-     * @param {Array} valuesToInsert
-     * @param {Array} valuesToOutput
-     * @param {Object} filters
-     * @returns {Promise}
-     * @memberof BaseDatabase
-     */
-    create(context, valuesToInsert, valuesToOutput, filters) {
-        return Promise.resolve({ context, valuesToInsert, valuesToOutput, filters });
-    }
-
-
-    /**
-     * Used to perform an operation updating existing data
-     * @param {any} context
-     * @param {Array} valuesToUpdate
-     * @param {Array} valuesToOutput
-     * @param {Object} filters
-     * @returns {Promise}
-     * @memberof BaseDatabase
-     */
-    update(context, valuesToUpdate, valuesToOutput, filters) {
-        return Promise.resolve({ context, valuesToUpdate, valuesToOutput, filters });
-    }
-
-
-    /**
-     * Used to perform an operation deleting existing data
-     * @param {any} context
-     * @param {Object} filters
-     * @returns {Promise}
-     * @memberof BaseDatabase
-     */
-    destroy(context, filters) {
-        return Promise.resolve({ context, filters });
-    }
-
     /**
      * Set the configuration of the database connection
      * @param {any} newConfiguration

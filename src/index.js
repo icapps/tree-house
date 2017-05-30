@@ -25,9 +25,6 @@ import BaseDatabase from './lib/base/BaseDatabase';
 import * as Cipher from './lib/authentication/Cipher';
 import PassportAuthentication from './lib/authentication/PassportAuthentication';
 
-// Database
-import MsSqlDatabase from './lib/database/MsSqlDatabase';
-
 class TreeHouse {
     constructor(configuration = DEFAULT_CONFIG) {
         this.configuration = configuration;
@@ -214,6 +211,5 @@ module.exports = {
     BaseAuthentication,
     BaseDatabase,
     PassportAuthentication,
-    MsSqlDatabase,
     Cipher,
 };
