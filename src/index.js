@@ -175,16 +175,20 @@ class TreeHouse {
      * Start up ExpressJS server
      */
     fireUpEngines() {
-        const httpServer = http.createServer(this.app);
-        httpServer.listen(this.configuration.port);
-        console.log(`TreeHouse HTTP NodeJS Server listening on port ${this.configuration.port}`);
+        // http://www.marcusoft.net/2015/10/eaddrinuse-when-watching-tests-with-mocha-and-supertest.html
+        if (module.parent) { return false; }
 
         // HTTPS - Optional
         if (this.configuration.https) {
             const httpsServer = https.createServer(this.getHttpsCredentials(), this.app);
             httpsServer.listen(this.configuration.https.port);
             console.log(`TreeHouse HTTPS NodeJS Server listening on port ${this.configuration.https.port}`);
+            return httpsServer;
         }
+        const httpServer = http.createServer(this.app);
+        httpServer.listen(this.configuration.port);
+        console.log(`TreeHouse HTTP NodeJS Server listening on port ${this.configuration.port}`);
+        return httpServer;
     }
 
     /**
