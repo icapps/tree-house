@@ -4,9 +4,11 @@ import bodyParser from 'body-parser';
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
+import cors from 'cors';
+import RateLimit from 'express-rate-limit';
 
 // Constants
-import { DEFAULT_APPLICATION_CONFIG as DEFAULT_CONFIG } from './lib/constants';
+import DEFAULT_APPLICATION_CONFIG from './lib/constants';
 
 // Router
 import Router from './lib/router/Router';
@@ -22,7 +24,7 @@ import BaseAuthentication from './lib/base/BaseAuthentication';
 class TreeHouse {
     constructor(configuration) {
         // TODO: Crash/error when no apiKey
-        this.configuration = Object.assign({}, DEFAULT_CONFIG, configuration);
+        this.configuration = Object.assign({}, DEFAULT_APPLICATION_CONFIG, configuration);
         this.router = new Router();
         this.setEnvironmentVariables();
         this.initExpressJS();
@@ -37,6 +39,7 @@ class TreeHouse {
         this.app = express();
         this.setSecurity();
         this.setBodyParser();
+        this.setRateLimit();
         this.setHeaders();
         this.setRouter();
     }
@@ -61,21 +64,25 @@ class TreeHouse {
     }
 
 
+    /**
+     * Set security measurements
+     */
     setSecurity() {
-        this.app.use(helmet());
+        this.app.use(helmet()); // Helmet
+        this.app.use(cors(this.configuration.cors)); // Cors
     }
 
 
-    // TODO: Implement using cors module (also allow to configure per route via policy or other way...)
-    setCors() {
-
-    }
-
-
-    // TODO: Implement basic rate-limiting middleware (also allow to configure per route via policy or other way...)
+    /**
+     * Set a rate limiter
+     * Used to limit repeated requests to public APIs and/or endpoints such as password reset
+     */
     setRateLimit() {
+        if (this.configuration.limiter.trustProxy) this.app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+        const limiter = new RateLimit(Object.assign({}, this.configuration.limiter));
 
-
+        //  apply to all requests
+        this.app.use(limiter);
     }
 
 
@@ -85,6 +92,7 @@ class TreeHouse {
      */
     setHeaders() {
         // Add headers
+        // TODO: Prefix /api needs to be the same as config
         this.app.all('/api/*', (req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
@@ -94,6 +102,7 @@ class TreeHouse {
 
         // Headers - fix for OPTIONS calls in localhost (Chrome etc.)
         // TODO: Only development/localhost environment
+        // TODO: Prefix /api needs to be the same as config
         this.app.all('/api/*', (req, res, next) => (req.method.toLowerCase() === 'options' ? res.sendStatus(204) : next()));
     }
 

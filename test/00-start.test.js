@@ -13,19 +13,24 @@ const CONFIGURATION = {
     bodyLimit: '10mb',
     apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
     basePath: process.env.BASE_PATH || '/api/v1',
+    cors: {
+        optionsSuccessStatus: 200,
+    },
+    limiter: {
+        trustProxy: false,
+        windowMs: 25 * 60 * 1000,
+        max: 150,
+        delayMs: 100,
+    },
 };
 
-const FULL_CONFIGURATION = {
-    port: 5000,
-    bodyLimit: '10mb',
-    apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
-    basePath: process.env.BASE_PATH || '/api/v1',
+const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, {
     https: {
         certificate: 'test/assets/test-ssl.cert',
         privateKey: 'test/assets/test-ssl.key',
         port: 5001,
     },
-};
+});
 
 const mockRequest = supertest(`http://localhost:${CONFIGURATION.port}${CONFIGURATION.basePath}`);
 
@@ -101,10 +106,10 @@ describe('New instance of a TreeHouse server', () => {
             mockRequest.get('/user')
                 .expect(200)
                 .end((err, res) => {
-                  if (err) return done(err);
-                  expect(res.body).to.eql({ user: { name: 'iCappsTestUser' } });
-                  return done();
-              });
+                    if (err) return done(err);
+                    expect(res.body).to.eql({ user: { name: 'iCappsTestUser' } });
+                    return done();
+                });
         });
         it('Get the unauthorized response', (done) => {
             mockRequest.get('/unauthorised')
