@@ -40,6 +40,7 @@ export default class Route {
      * Set policy(ies) on an express route
      * @param router - ExpressJS router instance
      */
+    // TODO: Rename to setMiddlewares?
     setPolicies(router) {
         if (router) {
             this.policies.forEach((Policy) => {

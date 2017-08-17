@@ -117,12 +117,12 @@ All policies need to extend from `BasePolicy` which only provides one function:
 `setPolicy()`
 
 ```
-import { application } from './main';
+import { passportAuthentication } from './main'; // Instance created via module tree-house-authentication
 import { BasePolicy } from 'tree-house';
 
 export class MyPolicy extends BasePolicy {
     setPolicy() {
-        return application.getAuthentication().authenticate(this.req, 'jwt')
+        return passportAuthentication.authenticate(this.req, 'jwt')
             .then((user) => {
                 if (!user) throw new this.Unauthorised();
                 return Object.assign(this.req, { session: { me: user } });
@@ -153,53 +153,15 @@ const myRoutes = [
     new Route('GET', '/employees', myController.getAllEmployees, [MyPolicy])
 ```
 
-#### Authentication
-All authentication needs to extend from `BaseAuthentication` which only requires the implementation of a function `authenticate()` at the moment. The only built-in authentication is [Passport](http://passportjs.org/) for now. But you can easily integrate your own authentication mechanism.
-
-##### Passport
-```
-const localStrategyConfig = {
-    usernameField: 'email',
-    passwordField: 'password',
-};
-
-const jwtStrategyConfig = {
-    secret: '8^dxE|gZu1ODB183s772)/3:l_#fdsfsdf|2ux3&lhN@LQ6g+"i$zq45fsdq1',
-    algorithm: 'HS256',
-    expiresIn: 24 * 60 * 60,
-    issuer: 'treehouse',
-    audience: 'TREEHOUSE',
-    authScheme: 'X-Session-Id',
-};
-
-// Implement own logic for local authorisation - must return a Promise
-function onLocalStrategy(email, password) { 
-     // Own authentication logic...
-     return Promise.resolve(jwtToken);
-}
-
-// Implement own logic for authorisation via JWT - must return a Promise
-function onJwtStrategy(payload) {
-    // Own authentication logic...
-    return Promise.resolve(userData);
-}
-```
-> The next function expects an error as first parameter and the response as second parameter
-
-```
-import { PassportAuthentication } from 'tree-house';
-const passportAuthentication = new PassportAuthentication();
-
-passportAuthentication.setLocalStrategy(localStrategyConfig, onLocalStrategy);
-passportAuthentication.setJwtStrategy(jwtStrategyConfig, onJwtStrategy);
-```
-
-#### Set everything onto the main application
+#### Set routes onto the main application
 ```
 application.setRoutes(myRoutes);
-application.setAuthentication(passportAuthentication);
-
 ```
+
+#### Authentication
+All authentication needs to extend from `BaseAuthentication` which only requires the implementation of a function `authenticate()` at the moment. 
+
+You can already use some predefined authentication methods by installing the `tree-house-authentication` module using `npm install tree-house-authentication`.
 
 #### Errors
 All errors need to extend from `BaseError`. Providing own custom errors is not yet supported at the moment but is already on the roadmap for the next release.

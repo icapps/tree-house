@@ -5,7 +5,6 @@ import http from 'http';
 import https from 'https';
 import fs from 'fs';
 
-// TODO: Convert into build task exporting all proper functions/variables
 // Constants
 import { DEFAULT_APPLICATION_CONFIG as DEFAULT_CONFIG } from './lib/constants';
 
@@ -19,19 +18,16 @@ import BaseError from './lib/base/BaseError';
 import BasePolicy from './lib/base/BasePolicy';
 import BaseService from './lib/base/BaseService';
 import BaseAuthentication from './lib/base/BaseAuthentication';
-import BaseDatabase from './lib/base/BaseDatabase';
-
-// Authentication
-import * as Cipher from './blocks/authentication/Cipher';
-import PassportAuthentication from './blocks/authentication/PassportAuthentication';
 
 class TreeHouse {
-    constructor(configuration = DEFAULT_CONFIG) {
-        this.configuration = configuration;
+    constructor(configuration) {
+        // TODO: Crash/error when no apiKey
+        this.configuration = Object.assign({}, DEFAULT_CONFIG, configuration);
         this.router = new Router();
         this.setEnvironmentVariables();
         this.initExpressJS();
     }
+
 
     /**
      * Intialise all ExpressJS configuration needed for the application to run
@@ -45,6 +41,7 @@ class TreeHouse {
         this.setRouter();
     }
 
+
     /**
      * Set process environment variables
      * @memberOf TreeHouse
@@ -52,6 +49,7 @@ class TreeHouse {
     setEnvironmentVariables() {
         process.env.apiKey = this.configuration.apiKey;
     }
+
 
     /**
      * Set body parser configuration
@@ -62,19 +60,24 @@ class TreeHouse {
         this.app.use(bodyParser.urlencoded({ extended: true, limit: this.configuration.bodyLimit }));
     }
 
+
     setSecurity() {
         this.app.use(helmet());
     }
+
 
     // TODO: Implement using cors module (also allow to configure per route via policy or other way...)
     setCors() {
 
     }
 
+
     // TODO: Implement basic rate-limiting middleware (also allow to configure per route via policy or other way...)
     setRateLimit() {
 
+
     }
+
 
     /**
      * Set some header properties, especially needed for development
@@ -90,8 +93,10 @@ class TreeHouse {
         });
 
         // Headers - fix for OPTIONS calls in localhost (Chrome etc.)
+        // TODO: Only development/localhost environment
         this.app.all('/api/*', (req, res, next) => (req.method.toLowerCase() === 'options' ? res.sendStatus(204) : next()));
     }
+
 
     /**
      * Set the express router instance of our router to the base path
@@ -101,6 +106,7 @@ class TreeHouse {
         this.app.use('/', this.router.expressRouter);
     }
 
+
     /**
      * Set all routes provided
      * @param {any} routes
@@ -109,6 +115,7 @@ class TreeHouse {
     setRoutes(routes) {
         this.router.setRoutes(routes);
     }
+
 
     /**
      * Get HTTPS credentials
@@ -131,55 +138,6 @@ class TreeHouse {
         }
     }
 
-    /**
-     * Return the Authentication if properly set
-     * @returns Authentication
-     * @memberOf TreeHouse
-     */
-    getAuthentication() {
-        if (this.authentication) {
-            if (this.authentication instanceof BaseAuthentication) {
-                return this.authentication;
-            }
-            throw new Error('Authentication handler set, but does not extend from BaseAuthentication');
-        }
-        throw new Error('Authentication handler not set!');
-    }
-
-    /**
-     * Set the authentication
-     * This needs to be a member of BaseAuthentication to properly function
-     * @param {any} authentication
-     * @memberOf TreeHouse
-     */
-    setAuthentication(authentication) {
-        this.authentication = authentication;
-    }
-
-    /**
-     * Return the database if properly set
-     * @returns Database
-     * @memberOf TreeHouse
-     */
-    getDatabase() {
-        if (this.database) {
-            if (this.database instanceof BaseDatabase) {
-                return this.database;
-            }
-            throw new Error('Database handler set, but does not extend from BaseAuthentication');
-        }
-        throw new Error('Database handler not set!');
-    }
-
-    /**
-     * Set the database
-     * This needs to be a member of BaseDatabase to properly function
-     * @param {any} database
-     * @memberOf TreeHouse
-     */
-    setDatabase(database) {
-        this.database = database;
-    }
 
     /**
      * Start up ExpressJS server
@@ -196,6 +154,7 @@ class TreeHouse {
             console.log(`TreeHouse HTTPS NodeJS Server listening on port ${this.configuration.https.port}`);
         }
     }
+
 
     /**
      * Set the configuration
@@ -219,7 +178,4 @@ module.exports = {
     BasePolicy,
     BaseService,
     BaseAuthentication,
-    BaseDatabase,
-    PassportAuthentication,
-    Cipher,
 };

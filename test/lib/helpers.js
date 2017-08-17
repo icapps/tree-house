@@ -1,6 +1,4 @@
 import { BaseController, BaseService, BasePolicy, BaseAuthentication } from '../../src/index';
-import { main } from '../00-start.test';
-
 
 /**
  * An authentication class with just its super class methods and variables
@@ -28,10 +26,8 @@ export class BaseMockPolicy extends BasePolicy {}
  */
 export class MockPolicy extends BasePolicy {
     setPolicy() {
-        return main.getAuthentication()
-            .authenticate(this.req, 'jwt')
-            .then(user => Object.assign(this.req, { session: { me: user } }))
-            .catch(() => { throw new this.Unauthorised(); });
+        Object.assign(this.req, { session: { me: { name: 'iCappsTestUser' } } });
+        return Promise.resolve();
     }
 }
 
@@ -44,13 +40,6 @@ export class MockPolicy extends BasePolicy {
  * @extends {BaseService}
  */
 export class MockService extends BaseService {
-    login(req) {
-        return main.getAuthentication()
-            .authenticate(req)
-            .then(user => user)
-            .catch(() => { throw new this.Unauthorised('Password and/or email are wrong'); });
-    }
-
     getUser(currentUser) {
         return Promise.resolve({ user: currentUser });
     }
@@ -81,7 +70,6 @@ export class MockController extends BaseController {
         this.mockService = new MockService();
     }
 
-    login = (req, res) => this.execute(res, this.mockService.login(req));
     getUser = (req, res) => this.execute(res, this.mockService.getUser(req.session.me));
     sendServerError = (req, res) => this.execute(res, this.mockService.sendServerError());
     sendUnauthorised = (req, res) => this.execute(res, this.mockService.sendUnauthorised());

@@ -1,8 +1,7 @@
 import { should, expect } from 'chai';
 import supertest from 'supertest';
 
-import { TreeHouse, PassportAuthentication, Cipher, Route } from '../src/index';
-import { localStrategyConfig, jwtStrategyConfig, onLocalStrategy, onJwtStrategy } from './lib/authentication.config';
+import { TreeHouse, Route } from '../src/index';
 import { MockController, MockPolicy, BaseMockAuthentication, BaseMockPolicy } from './lib/helpers';
 
 // Chai init
@@ -28,18 +27,12 @@ const FULL_CONFIGURATION = {
     },
 };
 
-const user = {
-    email: 'test@treehouse.com',
-    password: 'notSoRandom',
-};
 const mockRequest = supertest(`http://localhost:${CONFIGURATION.port}${CONFIGURATION.basePath}`);
 
 // Variables used during tests
 let newApplication;
-let authentication;
 let mockController;
 let routes = [];
-let webtoken;
 
 describe('Initialise things before running application', () => {
     describe('Controllers and routes', () => {
@@ -65,38 +58,17 @@ describe('New instance of a TreeHouse server', () => {
     describe('Initial setup', () => {
         it('Create new instance with the provided configuration', () => {
             newApplication = new TreeHouse(CONFIGURATION);
-            newApplication.configuration.should.equal(CONFIGURATION);
+            expect(newApplication.configuration).to.eql(CONFIGURATION);
 
             newApplication.setConfiguration(FULL_CONFIGURATION);
-            newApplication.configuration.should.equal(FULL_CONFIGURATION);
+            expect(newApplication.configuration).to.eql(FULL_CONFIGURATION);
 
             return expect(newApplication.router).not.to.be.empty;
-        });
-
-        it('Create Passport authentication', () => {
-            authentication = new PassportAuthentication();
-        });
-
-        it('Get JWT token without proper configuration', () => {
-            expect(authentication.getJwtToken.bind(user)).to.throw(Error);
-        });
-
-        it('Set passport configuration', () => {
-            authentication.setLocalStrategy(localStrategyConfig, onLocalStrategy);
-            authentication.setJwtStrategy(jwtStrategyConfig, onJwtStrategy);
-
-            webtoken = authentication.getJwtToken(user);
-            return expect(webtoken).not.to.be.empty;
         });
 
         it('Set Routes', () => {
             newApplication.setRoutes(routes);
             return expect(newApplication.router.getRoutes()).not.to.be.empty;
-        });
-
-        it('Set Authentication', () => {
-            newApplication.setAuthentication(authentication);
-            return expect(newApplication.authentication).not.to.be.empty;
         });
 
         it('Fire up the application', () => {
@@ -106,12 +78,6 @@ describe('New instance of a TreeHouse server', () => {
         });
     });
 
-    describe('Cipher helpers', () => {
-        it('Hash the current password and compare', () => {
-            const hashedPassword = Cipher.getHashedPassword(user.password);
-            return expect(Cipher.comparePassword(user.password, hashedPassword)).to.be.true;
-        });
-    });
 
     describe('Custom Router and Policies', () => {
         it('Set a route manually without express router set', () => { expect(new Route().setRoute).to.throw(Error); });
@@ -131,36 +97,14 @@ describe('New instance of a TreeHouse server', () => {
     });
 
     describe('API Calls', () => {
-        it('Login with our user', (done) => {
-            mockRequest.post('/login')
-                .send({ email: user.email, password: user.password })
+        it('Get current user via route with mock policy', (done) => {
+            mockRequest.get('/user')
                 .expect(200)
                 .end((err, res) => {
-                    if (err) return done(err);
-                    webtoken = res.body.token;
-                    /* eslint-disable no-unused-expressions */
-                    expect(webtoken).not.to.be.empty;
-                    return done();
-                });
-        });
-        it('Login with invalid user', (done) => {
-            mockRequest.post('/login')
-                .send({ email: user.email, password: 'fakePassword' })
-                .expect(401, done);
-        });
-        it('Get current user via authenticated call (JWT in headers)', (done) => {
-            mockRequest.get('/user')
-                .set('Authorization', `JWT ${webtoken}`)
-                .expect(200, done);
-        });
-        it('Get current user via unauthenticated call (Invalid JWT in headers)', (done) => {
-            mockRequest.get('/user')
-                .set('Authorization', 'JWT FAKE_JWT123')
-                .expect(401, done);
-        });
-        it('Get current user via unauthenticated call (NO JWT in headers)', (done) => {
-            mockRequest.get('/user')
-                .expect(401, done);
+                  if (err) return done(err);
+                  expect(res.body).to.eql({ user: { name: 'iCappsTestUser' } });
+                  return done();
+              });
         });
         it('Get the unauthorized response', (done) => {
             mockRequest.get('/unauthorised')
