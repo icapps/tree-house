@@ -1,6 +1,6 @@
 {
   "name": "tree-house",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NodeJS project using ExpressJS to create an easy, secure and customisable API layer",
   "main": "./build/index.js",
   "scripts": {
