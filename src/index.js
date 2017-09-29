@@ -14,18 +14,22 @@ import DEFAULT_APPLICATION_CONFIG from './lib/constants';
 import Router from './lib/router/Router';
 import Route from './lib/router/Route';
 
+// Error handler
+import ErrorHandler from './lib/handlers/ErrorHandler';
+
 // Base
 import BaseController from './lib/base/BaseController';
 import BaseError from './lib/base/BaseError';
 import BasePolicy from './lib/base/BasePolicy';
 import BaseService from './lib/base/BaseService';
-import BaseAuthentication from './lib/base/BaseAuthentication';
 
 class TreeHouse {
     constructor(configuration) {
         // TODO: Crash/error when no apiKey
         this.configuration = Object.assign({}, DEFAULT_APPLICATION_CONFIG, configuration);
         this.router = new Router();
+        this.errorHandler = new ErrorHandler(); // Default error handler
+
         this.setEnvironmentVariables();
         this.initExpressJS();
     }
@@ -121,8 +125,18 @@ class TreeHouse {
      * @param {any} routes
      * @memberOf TreeHouse
      */
-    setRoutes(routes) {
-        this.router.setRoutes(routes);
+    setRoutes = (routes) => {
+        this.router.setRoutes(routes, this.errorHandler);
+    }
+
+
+    /**
+     * Set a custom error handler
+     * @param {any} handler
+     * @memberof TreeHouse
+     */
+    setErrorHandler(handler) {
+      this.errorHandler = handler;
     }
 
 
@@ -186,5 +200,4 @@ module.exports = {
     BaseError,
     BasePolicy,
     BaseService,
-    BaseAuthentication,
 };

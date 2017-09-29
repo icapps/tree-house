@@ -15,24 +15,26 @@ export default class Router {
     /**
      * Set the routes onto the express router
      * @param routes
+     * @param {any} errorHandler
      */
-    setExpressRoutes(routes) {
+    setExpressRoutes(routes, errorHandler) {
         routes.forEach((route) => {
             route.setPolicies(this.expressRouter);
-            route.setRoute(this.expressRouter);
+            route.setRoute(this.expressRouter, errorHandler);
         });
     }
 
     /**
      * Set routes on object and use express routes
      * @param {any} routes
+     * @param {any} errorHandler
      * @memberOf Router
      */
-    setRoutes(routes) {
+    setRoutes(routes, errorHandler) {
         this.routes = routes;
 
         // set express routes and policies
-        this.setExpressRoutes(this.routes);
+        this.setExpressRoutes(this.routes, errorHandler);
     }
 
     /**

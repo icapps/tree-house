@@ -1,4 +1,4 @@
-import ErrorHandler from '../handlers/ErrorHandler';
+
 
 // TODO: Set via initial configuration on application level
 const BASE_PATH = process.env.BASE_PATH || '/api/v1';
@@ -14,21 +14,21 @@ export default class Route {
      */
     constructor(type, url, fn, policies = []) {
         Object.assign(this, { type, url, fn, policies });
-        this.errorHandler = new ErrorHandler();
     }
 
     /**
      * Set function on an express route
      * @param router - ExpressJS router instance
+     * @param errorHandler - Error handler
      */
-    setRoute(router) {
+    setRoute(router, errorHandler) {
         if (router) {
             router[this.type.toLowerCase()](`${BASE_PATH}${this.url}`, (req, res) => {
                 // Try to execute controller function and handle any thrown errors
                 try {
                     this.fn(req, res);
                 } catch (error) {
-                    this.errorHandler.execute(res, error);
+                    errorHandler.execute(res, error);
                 }
             });
         } else {
