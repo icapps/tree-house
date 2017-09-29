@@ -1,4 +1,6 @@
-export default class ErrorHandler {
+import BaseErrorHandler from '../base/BaseErrorHandler';
+
+export default class ErrorHandler extends BaseErrorHandler {
     /**
      * Pass an Error to an Express response
      * @param {any} res
