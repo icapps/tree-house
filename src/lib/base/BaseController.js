@@ -7,16 +7,20 @@ export default class BaseController {
         this.errorHandler = new ErrorHandler();
     }
 
+
     /**
      * Execute a controller function and handle response/error
-     * @param {any} res
-     * @param {any} fn
+     * @param {any} res expressJS response
+     * @param {any} fn function that will be executed
      * @returns {ExpressJS Response}
      * @memberOf BaseController
      */
-    execute(res, fn) {
-        return fn
-            .then(result => this.responseHandler.execute(res, result))
-            .catch(error => this.errorHandler.execute(res, error));
+    async execute(res, fn) {
+        try {
+            const result = await fn;
+            this.responseHandler.execute(res, result);
+        } catch (error) {
+            this.errorHandler.execute(res, error);
+        }
     }
 }

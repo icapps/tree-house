@@ -1,15 +1,40 @@
-import { BaseController } from 'tree-house';
+import { BaseController } from '../../../../build';
 import UserService from '../services/UserService';
 
 export default class UserController extends BaseController {
     constructor() {
         super();
-        this.userService = new UserService();
+        this.userService = new UserService(); // Manual DI // TODO: Replace via DI awilix
     }
 
-    login = (req, res) => this.execute(res, this.userService.login(req));
-    getUser = (req, res) => this.execute(res, this.userService.getUser(req.session.me));
-    sendServerError = (req, res) => this.execute(res, this.userService.sendServerError());
-    sendUnauthorised = (req, res) => this.execute(res, this.userService.sendUnauthorised());
-    sendBadRequest = (req, res) => this.execute(res, this.userService.sendBadRequest());
+    /**
+     * Login the user
+     * @param {Response} res express response
+     */
+    login = res => this.execute(res, this.userService.login());
+
+
+    /**
+     * Get the current user
+     * @param {Response} res express response
+     * @param {Request} req express request
+     * @returns {Promise}
+     */
+    getUser = (res, req) => this.execute(res, this.userService.getUser(req.session.user));
+
+
+    /**
+     * Send an unauthorised response
+     * @param {Response} res express response
+     * @returns {Promise}
+     */
+    isUnauthorised = res => this.execute(res, this.userService.unauthorisedAccess());
+
+
+    /**
+     * Send an unauthorised response
+     * @param {Response} res express response
+     * @returns {Promise}
+     */
+    badRequest = res => this.execute(res, this.userService.badRequest());
 }

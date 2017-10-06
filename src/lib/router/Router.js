@@ -15,26 +15,28 @@ export default class Router {
     /**
      * Set the routes onto the express router
      * @param routes
+     * @param {String} basePath path used to prefix on every route
      * @param {any} errorHandler
      */
-    setExpressRoutes(routes, errorHandler) {
+    setExpressRoutes(routes, basePath, errorHandler) {
         routes.forEach((route) => {
-            route.setPolicies(this.expressRouter);
-            route.setRoute(this.expressRouter, errorHandler);
+            route.setMiddlewares(this.expressRouter, basePath, errorHandler);
+            route.setRoute(this.expressRouter, basePath, errorHandler);
         });
     }
 
     /**
      * Set routes on object and use express routes
      * @param {any} routes
+     * @param {String} basePath path used to prefix on every route
      * @param {any} errorHandler
      * @memberOf Router
      */
-    setRoutes(routes, errorHandler) {
+    setRoutes(routes, basePath, errorHandler) {
         this.routes = routes;
 
         // set express routes and policies
-        this.setExpressRoutes(this.routes, errorHandler);
+        this.setExpressRoutes(this.routes, basePath, errorHandler);
     }
 
     /**

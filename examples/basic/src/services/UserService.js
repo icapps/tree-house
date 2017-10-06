@@ -1,27 +1,22 @@
-import { BaseService } from 'tree-house';
-import { main } from '../index';
+import { BaseService } from '../../../../build';
 
 export default class UserService extends BaseService {
-    login(req) {
-        return main.getAuthentication()
-            .authenticate(req)
-            .then(user => user)
-            .catch(() => { throw new this.Unauthorised('Password and/or email are wrong'); });
+    login() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({ response: 'User succesfully logged in' });
+            }, 3500);
+        });
     }
 
+
+    /**
+     * Return the current user data
+     * @param {any} currentUser
+     * @returns {Object}
+     */
     getUser(currentUser) {
-        return Promise.resolve({ user: currentUser });
-    }
-
-    sendServerError() {
-        throw new this.ServerError();
-    }
-
-    sendUnauthorised() {
-        throw new this.Unauthorised();
-    }
-
-    sendBadRequest() {
-        throw new this.BadRequest();
+        console.log(currentUser);
+        return { user: currentUser };
     }
 }

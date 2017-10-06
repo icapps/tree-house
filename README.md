@@ -85,9 +85,8 @@ export class MyController extends BaseController {
         this.myService = new MyService();      // Needed to use functions from this service
     }
 
-    getAllEmployees = (req, res) => {
-        return this.execute(res, this.myService.getEmployees());
-    }
+	// Get all employees
+    getAllEmployees = (req, res) => this.execute(res, this.myService.getEmployees());
 }
 
 ```
@@ -112,20 +111,20 @@ export class MyService extends BaseService {
 ```
 
 
-#### Policies
-All policies need to extend from `BasePolicy` which only provides one function:
-`setPolicy()`
+#### Middleware
+All middleware needs to extend from `BaseMiddleware` which only provides one function:
+`execute(req, res)`
 
 ```
 import { passportAuthentication } from './main'; // Instance created via module tree-house-authentication
-import { BasePolicy } from 'tree-house';
+import { BaseMiddleware } from 'tree-house';
 
-export class MyPolicy extends BasePolicy {
-    setPolicy() {
-        return passportAuthentication.authenticate(this.req, 'jwt')
+export class MyPolicy extends BaseMiddleware {
+    execute(req, res) {
+        return passportAuthentication.authenticate(req, 'jwt')
             .then((user) => {
-                if (!user) throw new this.Unauthorised();
-                return Object.assign(this.req, { session: { me: user } });
+                if (!user) throw new TreeError.Unauthorised();
+                return Object.assign(req, { session: { me: user } });
             });
     }
 }
@@ -145,12 +144,12 @@ You need to create an array consisting of `Route` objects. A Route object has fo
 ```
 import { Route } from 'tree-house';
 import { MyController } from './myController';
-import { MyPolicy } from './myPolicy';
+import { MyMiddlewareToExecute } from './myMiddlewareToExecute';
 
 const myController = new MyController();
             
 const myRoutes = [
-    new Route('GET', '/employees', myController.getAllEmployees, [MyPolicy])
+    new Route('GET', '/employees', myController.getAllEmployees, [MyMiddlewareToExecute])
 ```
 
 #### Set routes onto the main application
@@ -159,21 +158,39 @@ application.setRoutes(myRoutes);
 ```
 
 #### Authentication
-All authentication needs to extend from `BaseAuthentication` which only requires the implementation of a function `authenticate()` at the moment. 
+Install the `tree-house-authentication` module using `npm install tree-house-authentication`.
 
-You can already use some predefined authentication methods by installing the `tree-house-authentication` module using `npm install tree-house-authentication`.
+#### Error handler
+There is a default error handler built in, but you can provide your own custom error handler if you want to. The only requirement is that it will need to extend from `BaseErrorHandler` and have an `execute(res, error){}` function.
 
-#### Errors
-All errors need to extend from `BaseError`. Providing own custom errors is not yet supported at the moment but is already on the roadmap for the next release.
-
-There are a few errors already predefined which can be used in every service extending from `BaseService` or every policy extending from `BasePolicy`. You can even provide a custom message and/or code:
+Example:
 
 ```
-throw new this.BadRequest('This is a bad request', 'BAD_REQUEST');
+import { BaseErrorHandler } from 'tree-house';
+
+export default class MyCustomErrorHandler extends BaseErrorHandler {
+    execute(res, error) {
+        res.status(error.statusCode);
+        res.json({ errorMessage: error.message, errorCode: error.code });
+    }
+}
+```
+
+```
+const myCustomErrorHandler = new MyCustomErrorHandler();
+application.setErrorHandler(myCustomErrorHandler);
+```
+
+#### Errors
+All errors need to extend from `BaseError`. Treehouse provides some errors out of the box, and you can import them via `import { TreeError } from 'tree-house'`.
+
+
+```
+throw new TreeError.BadRequest('This is a bad request', 'BAD_REQUEST');
       
-throw new this.Unauthorised('You are not authorized to perform this action', 'NOT_AUTHORISED';
+throw new TreeError.Unauthorised('You are not authorized to perform this action', 'NOT_AUTHORISED';
       
-throw new this.ServerError('Something went wrong', 'SERVER_ERR');
+throw new TreeError.ServerError('Something went wrong', 'SERVER_ERR');
 ```
 ##### Predefined errors:
 | Error           | Default Message   | Default code  | Status |

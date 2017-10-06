@@ -1,5 +1,5 @@
-import { TreeHouse, PassportAuthentication } from 'tree-house';
-import { localStrategyConfig, jwtStrategyConfig, onLocalStrategy, onJwtStrategy } from './config/authentication';
+
+import { TreeHouse } from '../../../build';
 import ROUTES from './config/routes';
 
 // Configuration
@@ -12,22 +12,16 @@ const APP_CONFIGURATION = {
 
 function init() {
     // Create the new TreeHouse instance
-    const main = new TreeHouse(APP_CONFIGURATION);
-
-    // Passport authentication
-    const passportAuthentication = new PassportAuthentication();
-    passportAuthentication.setLocalStrategy(localStrategyConfig, onLocalStrategy);
-    passportAuthentication.setJwtStrategy(jwtStrategyConfig, onJwtStrategy);
+    const app = new TreeHouse(APP_CONFIGURATION);
 
     // Set the correct stuff onto the application instance
-    main.setAuthentication(passportAuthentication);
-    main.setRoutes(ROUTES);
+    app.setRoutes(ROUTES);
 
     // Export the instance to use throughout the project
-    module.exports.main = main;
+    module.exports.app = app;
 
     // Fire up the server
-    main.fireUpEngines();
+    app.fireUpEngines();
 }
 
 

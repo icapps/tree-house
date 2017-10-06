@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
@@ -7,28 +8,36 @@ import fs from 'fs';
 import cors from 'cors';
 import RateLimit from 'express-rate-limit';
 
-// Constants
-import DEFAULT_APPLICATION_CONFIG from './lib/constants';
+// Constants configuration
+import DEFAULT_APPLICATION_CONFIG from './lib/config';
 
 // Router
 import Router from './lib/router/Router';
 import Route from './lib/router/Route';
 
-// Error handler
+// Error handler and errors
 import ErrorHandler from './lib/handlers/ErrorHandler';
+import BadRequestError from './lib/errors/BadRequest';
+import ServerError from './lib/errors/ServerError';
+import UnauthorisedError from './lib/errors/Unauthorised';
 
 // Base
 import BaseController from './lib/base/BaseController';
 import BaseError from './lib/base/BaseError';
-import BasePolicy from './lib/base/BasePolicy';
+import BaseMiddleware from './lib/base/BaseMiddleware';
 import BaseService from './lib/base/BaseService';
+import BaseErrorHandler from './lib/base/BaseErrorHandler';
+
+// Register all default predefined errors and combine them into a TreeError object
+const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError };
 
 class TreeHouse {
     constructor(configuration) {
-        // TODO: Crash/error when no apiKey
         this.configuration = Object.assign({}, DEFAULT_APPLICATION_CONFIG, configuration);
         this.router = new Router();
-        this.errorHandler = new ErrorHandler(); // Default error handler
+
+        // Default error handler
+        this.errorHandler = new ErrorHandler();
 
         this.setEnvironmentVariables();
         this.initExpressJS();
@@ -40,7 +49,7 @@ class TreeHouse {
      * @memberOf TreeHouse
      */
     initExpressJS() {
-        this.app = express();
+        this.express = express();
         this.setSecurity();
         this.setBodyParser();
         this.setRateLimit();
@@ -63,8 +72,8 @@ class TreeHouse {
      * @memberOf TreeHouse
      */
     setBodyParser() {
-        this.app.use(bodyParser.json({ limit: this.configuration.bodyLimit }));
-        this.app.use(bodyParser.urlencoded({ extended: true, limit: this.configuration.bodyLimit }));
+        this.express.use(bodyParser.json({ limit: this.configuration.bodyLimit }));
+        this.express.use(bodyParser.urlencoded({ extended: true, limit: this.configuration.bodyLimit }));
     }
 
 
@@ -72,8 +81,8 @@ class TreeHouse {
      * Set security measurements
      */
     setSecurity() {
-        this.app.use(helmet()); // Helmet
-        this.app.use(cors(this.configuration.cors)); // Cors
+        this.express.use(helmet()); // Helmet
+        this.express.use(cors(this.configuration.cors)); // Cors
     }
 
 
@@ -82,11 +91,11 @@ class TreeHouse {
      * Used to limit repeated requests to public APIs and/or endpoints such as password reset
      */
     setRateLimit() {
-        if (this.configuration.limiter.trustProxy) this.app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+        if (this.configuration.limiter.trustProxy) this.express.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
         const limiter = new RateLimit(Object.assign({}, this.configuration.limiter));
 
         //  apply to all requests
-        this.app.use(limiter);
+        this.express.use(limiter);
     }
 
 
@@ -96,8 +105,7 @@ class TreeHouse {
      */
     setHeaders() {
         // Add headers
-        // TODO: Prefix /api needs to be the same as config
-        this.app.all('/api/*', (req, res, next) => {
+        this.express.all(`${this.configuration.basePath}/*`, (req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
             res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
@@ -105,9 +113,10 @@ class TreeHouse {
         });
 
         // Headers - fix for OPTIONS calls in localhost (Chrome etc.)
-        // TODO: Only development/localhost environment
-        // TODO: Prefix /api needs to be the same as config
-        this.app.all('/api/*', (req, res, next) => (req.method.toLowerCase() === 'options' ? res.sendStatus(204) : next()));
+        // Only applies when in development mode
+        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'develop') {
+            this.express.all(`${this.configuration.basePath}/*`, (req, res, next) => (req.method.toLowerCase() === 'options' ? res.sendStatus(204) : next()));
+        }
     }
 
 
@@ -116,7 +125,7 @@ class TreeHouse {
      * @memberOf TreeHouse
      */
     setRouter() {
-        this.app.use('/', this.router.expressRouter);
+        this.express.use('/', this.router.expressRouter);
     }
 
 
@@ -126,7 +135,7 @@ class TreeHouse {
      * @memberOf TreeHouse
      */
     setRoutes = (routes) => {
-        this.router.setRoutes(routes, this.errorHandler);
+        this.router.setRoutes(routes, this.configuration.basePath, this.errorHandler);
     }
 
 
@@ -136,7 +145,7 @@ class TreeHouse {
      * @memberof TreeHouse
      */
     setErrorHandler(handler) {
-      this.errorHandler = handler;
+        this.errorHandler = handler;
     }
 
 
@@ -166,13 +175,13 @@ class TreeHouse {
      * Start up ExpressJS server
      */
     fireUpEngines() {
-        const httpServer = http.createServer(this.app);
+        const httpServer = http.createServer(this.express);
         httpServer.listen(this.configuration.port);
         console.log(`TreeHouse HTTP NodeJS Server listening on port ${this.configuration.port}`);
 
         // HTTPS - Optional
         if (this.configuration.https) {
-            const httpsServer = https.createServer(this.getHttpsCredentials(), this.app);
+            const httpsServer = https.createServer(this.getHttpsCredentials(), this.express);
             httpsServer.listen(this.configuration.https.port);
             console.log(`TreeHouse HTTPS NodeJS Server listening on port ${this.configuration.https.port}`);
         }
@@ -197,7 +206,9 @@ module.exports = {
     TreeHouse,
     Route,
     BaseController,
+    BaseErrorHandler,
     BaseError,
-    BasePolicy,
+    BaseMiddleware,
     BaseService,
+    TreeError,
 };

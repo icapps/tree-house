@@ -1,5 +1,3 @@
-
-
 // TODO: Set via initial configuration on application level
 const BASE_PATH = process.env.BASE_PATH || '/api/v1';
 
@@ -10,23 +8,25 @@ export default class Route {
      * @param type
      * @param url
      * @param fn
-     * @param policies
+     * @param middlewares
      */
-    constructor(type, url, fn, policies = []) {
-        Object.assign(this, { type, url, fn, policies });
+    constructor(type, url, fn, middlewares = []) {
+        Object.assign(this, { type, url, fn, middlewares });
     }
+
 
     /**
      * Set function on an express route
      * @param router - ExpressJS router instance
+     * @param {String} basePath path used to prefix on every route
      * @param errorHandler - Error handler
      */
-    setRoute(router, errorHandler) {
+    setRoute(router, basePath, errorHandler) {
         if (router) {
-            router[this.type.toLowerCase()](`${BASE_PATH}${this.url}`, (req, res) => {
+            router[this.type.toLowerCase()](`${BASE_PATH}${this.url}`, async (req, res) => {
                 // Try to execute controller function and handle any thrown errors
                 try {
-                    this.fn(req, res);
+                    await this.fn(res, req); // Pass request as second parameter because not all controllers will use the request
                 } catch (error) {
                     errorHandler.execute(res, error);
                 }
@@ -36,17 +36,27 @@ export default class Route {
         }
     }
 
+
     /**
-     * Set policy(ies) on an express route
+     * Set middleware(s) on an express route
      * @param router - ExpressJS router instance
+     * @param {String} basePath path used to prefix on every route
+     * @param errorHandler - Error handler
      */
-    // TODO: Rename to setMiddlewares?
-    setPolicies(router) {
+    setMiddlewares(router, basePath, errorHandler) {
         if (router) {
-            this.policies.forEach((Policy) => {
-                router.use(`${BASE_PATH}${this.url}`, (req, res, next) => {
-                    const policy = new Policy(req, res, next);
-                    policy.execute();
+            this.middlewares.forEach((Middleware) => {
+                router.use(`${BASE_PATH}${this.url}`, async (req, res, next) => {
+                    const middleware = new Middleware();
+
+                    // Try to execute middleware function and handle any thrown errors
+                    try {
+                        await middleware.execute(req, res);
+                        next();
+                    } catch (error) {
+                        console.log('ERRORRRR', error);
+                        errorHandler.execute(res, error);
+                    }
                 });
             });
         } else {

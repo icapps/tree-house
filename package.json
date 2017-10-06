@@ -1,6 +1,6 @@
 {
   "name": "tree-house",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "NodeJS project using ExpressJS to create an easy, secure and customisable API layer",
   "main": "./build/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "lint"
   ],
   "dependencies": {
+    "awilix": "^2.8.1",
     "body-parser": "~1.17.2",
     "bunyan": "^1.8.10",
     "cors": "^2.8.4",
@@ -27,8 +28,9 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^7.1.1",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.1",
