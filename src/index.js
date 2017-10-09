@@ -149,10 +149,11 @@ class TreeHouse {
 
     /**
      * Start up project/server
+     * @param {Boolean} clustered Start the application in clustered mode or regular mode
      */
-    fireUpEngines() {
+    fireUpEngines(clustered = true) {
         // Create a new process config and fire up the application
-        new ProcessConfig().start(this.express, this.configuration);
+        new ProcessConfig().start(this.express, this.configuration, clustered);
     }
 
 

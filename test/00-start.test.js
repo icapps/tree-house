@@ -2,7 +2,7 @@ import { should, expect } from 'chai';
 import supertest from 'supertest';
 
 import { TreeHouse, Route } from '../src/index';
-import { MockController, BaseMockMiddleware } from './lib/helpers';
+import { MockController, BaseMockMiddleware, MockMiddleware } from './lib/helpers';
 
 // Chai init
 should();
@@ -40,7 +40,7 @@ describe('Initialise things before running application', () => {
             const { getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
 
             routes = [
-                new Route('GET', '/user', getUser),
+                new Route('GET', '/user', getUser, [MockMiddleware]),
                 new Route('GET', '/serverError', sendServerError),
                 new Route('GET', '/unauthorised', sendUnauthorised),
                 new Route('GET', '/badRequest', sendBadRequest),
@@ -69,7 +69,7 @@ describe('New instance of a TreeHouse server', () => {
         it('Fire up the application', () => {
             // Export the main application instance
             module.exports.main = newApplication;
-            newApplication.fireUpEngines();
+            newApplication.fireUpEngines(false);
         });
     });
 
@@ -80,14 +80,14 @@ describe('New instance of a TreeHouse server', () => {
     });
 
     describe('Custom bare extending classes', () => {
-        it('Extend BasePolicy', () => {
+        it('Extend BaseMiddleware', () => {
             new BaseMockMiddleware().execute()
-                .then(result => expect(result).to.be.resolved);
+                .then(result => expect(result).not.to.be.empty);
         });
     });
 
     describe('API Calls', () => {
-        it('Get current user via route with mock policy', (done) => {
+       it('Get current user via route with mock policy', (done) => {
             mockRequest.get('/user')
                 .expect(200)
                 .end((err, res) => {

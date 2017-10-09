@@ -19,7 +19,7 @@ export class BaseMockMiddleware extends BaseMiddleware {}
  */
 export class MockMiddleware extends BaseMiddleware {
     execute(req) {
-        return Object.assign(req, { session: { me: { name: 'iCappsTestUser' } } });
+        return Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
     }
 }
 
@@ -37,7 +37,7 @@ export class MockService extends BaseService {
     }
 
     sendServerError() {
-        throw new TreeError.ServerError();
+        throw new TreeError.Server();
     }
 
     sendUnauthorised() {
@@ -62,8 +62,8 @@ export class MockController extends BaseController {
         this.mockService = new MockService();
     }
 
-    getUser = (req, res) => this.execute(res, this.mockService.getUser(req.session.me));
-    sendServerError = (req, res) => this.execute(res, this.mockService.sendServerError());
-    sendUnauthorised = (req, res) => this.execute(res, this.mockService.sendUnauthorised());
-    sendBadRequest = (req, res) => this.execute(res, this.mockService.sendBadRequest());
+    getUser = (res, req) => this.execute(res, this.mockService.getUser(req.session.user));
+    sendServerError = res => this.execute(res, this.mockService.sendServerError());
+    sendUnauthorised = res => this.execute(res, this.mockService.sendUnauthorised());
+    sendBadRequest = res => this.execute(res, this.mockService.sendBadRequest());
 }

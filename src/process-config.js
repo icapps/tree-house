@@ -14,8 +14,8 @@ export default class processConfig {
      * @param {any} configuration
      * @returns {any}
      */
-    start(expressInstance, configuration) {
-        return cluster.isMaster ? this.startMasterCluster(configuration) : this.startHttpServer(expressInstance, configuration);
+    start(expressInstance, configuration, clustered = true) {
+        return cluster.isMaster && clustered ? this.startMasterCluster(configuration) : this.startHttpServer(expressInstance, configuration);
     }
 
 
@@ -52,7 +52,7 @@ export default class processConfig {
 
         // HTTPS - Optional
         if (configuration.https) {
-            const httpsServer = https.createServer(this.getHttpsCredentials(), expressInstance);
+            const httpsServer = https.createServer(this.getHttpsCredentials(configuration), expressInstance);
             httpsServer.listen(configuration.https.port);
             console.log(`TreeHouse HTTPS NodeJS Server listening on port ${configuration.https.port}`);
         }
@@ -82,8 +82,9 @@ export default class processConfig {
 /**
  * Any uncaught exceptions
  */
-process.on('uncaughtException', (error) => {
+// FIXME: Fix this so nodeJS releases back process (in unclusted mode)
+/* process.on('uncaughtException', (error) => {
     console.error(`${(new Date()).toUTCString()} uncaughtException:${error.message}`);
     console.error(error.stack);
     process.exit(1);
-});
+}); */
