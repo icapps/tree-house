@@ -17,15 +17,17 @@
   ],
   "dependencies": {
     "awilix": "^2.8.1",
-    "body-parser": "~1.17.2",
+    "body-parser": "~1.18.2",
     "bunyan": "^1.8.10",
+    "cluster": "^0.7.7",
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "express-rate-limit": "^2.9.0",
     "helmet": "^3.6.0",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "os": "^0.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -35,14 +37,14 @@
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.1",
     "chai-things": "^0.2.0",
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "eslint": "^4.4.1",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-node": "^5.1.1",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.3.0",
+    "mocha": "^4.0.1",
     "pre-commit": "^1.2.2",
     "supertest": "^3.0.0"
   },

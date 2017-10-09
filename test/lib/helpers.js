@@ -1,33 +1,25 @@
-import { BaseController, BaseService, BasePolicy, BaseAuthentication } from '../../src/index';
+import { BaseController, BaseService, BaseMiddleware, TreeError } from '../../src/index';
+
 
 /**
- * An authentication class with just its super class methods and variables
+ * A middleware class with just its super class methods and variables
  * @export
- * @class BaseMockAuthentication
- * @extends {BaseAuthentication}
+ * @class BaseMockMiddleware
+ * @extends {BaseMiddleware}
  */
-export class BaseMockAuthentication extends BaseAuthentication {}
-
-/**
- * A policy class with just its super class methods and variables
- * @export
- * @class BaseMockPolicy
- * @extends {BasePolicy}
- */
-export class BaseMockPolicy extends BasePolicy {}
+export class BaseMockMiddleware extends BaseMiddleware {}
 
 
 /**
- * A basic policy using the provided authentication method
+ * A basic middleware using the provided authentication method
  *
  * @export
- * @class MockPolicy
+ * @class MockMiddleware
  * @extends {BasePolicy}
  */
-export class MockPolicy extends BasePolicy {
-    setPolicy() {
-        Object.assign(this.req, { session: { me: { name: 'iCappsTestUser' } } });
-        return Promise.resolve();
+export class MockMiddleware extends BaseMiddleware {
+    execute(req) {
+        return Object.assign(req, { session: { me: { name: 'iCappsTestUser' } } });
     }
 }
 
@@ -41,19 +33,19 @@ export class MockPolicy extends BasePolicy {
  */
 export class MockService extends BaseService {
     getUser(currentUser) {
-        return Promise.resolve({ user: currentUser });
+        return { user: currentUser };
     }
 
     sendServerError() {
-        throw new this.ServerError();
+        throw new TreeError.ServerError();
     }
 
     sendUnauthorised() {
-        throw new this.Unauthorised();
+        throw new TreeError.Unauthorised();
     }
 
     sendBadRequest() {
-        throw new this.BadRequest();
+        throw new TreeError.BadRequest();
     }
 }
 

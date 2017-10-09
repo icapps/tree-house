@@ -2,35 +2,26 @@ import { should, expect } from 'chai';
 import supertest from 'supertest';
 
 import { TreeHouse, Route } from '../src/index';
-import { MockController, MockPolicy, BaseMockAuthentication, BaseMockPolicy } from './lib/helpers';
+import { MockController, BaseMockMiddleware } from './lib/helpers';
 
 // Chai init
 should();
 
 // CONSTANTS
-const CONFIGURATION = {
-    port: 5000,
+const CONFIGURATION = { port: 5000,
     bodyLimit: '10mb',
     apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
     basePath: process.env.BASE_PATH || '/api/v1',
-    cors: {
-        optionsSuccessStatus: 200,
-    },
-    limiter: {
-        trustProxy: false,
+    workers: 2,
+    cors: { optionsSuccessStatus: 200 },
+    limiter: { trustProxy: false,
         windowMs: 25 * 60 * 1000,
         max: 150,
-        delayMs: 100,
-    },
-};
+        delayMs: 100 } };
 
-const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, {
-    https: {
-        certificate: 'test/assets/test-ssl.cert',
+const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, { https: { certificate: 'test/assets/test-ssl.cert',
         privateKey: 'test/assets/test-ssl.key',
-        port: 5001,
-    },
-});
+        port: 5001 } });
 
 const mockRequest = supertest(`http://localhost:${CONFIGURATION.port}${CONFIGURATION.basePath}`);
 
@@ -46,11 +37,10 @@ describe('Initialise things before running application', () => {
         });
 
         it('Create new routes from controller', () => {
-            const { login, getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
+            const { getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
 
             routes = [
-                new Route('POST', '/login', login),
-                new Route('GET', '/user', getUser, [MockPolicy]),
+                new Route('GET', '/user', getUser),
                 new Route('GET', '/serverError', sendServerError),
                 new Route('GET', '/unauthorised', sendUnauthorised),
                 new Route('GET', '/badRequest', sendBadRequest),
@@ -86,17 +76,12 @@ describe('New instance of a TreeHouse server', () => {
 
     describe('Custom Router and Policies', () => {
         it('Set a route manually without express router set', () => { expect(new Route().setRoute).to.throw(Error); });
-        it('Set policies manually without express router set', () => { expect(new Route().setPolicies).to.throw(Error); });
+        it('Set policies manually without express router set', () => { expect(new Route().setMiddlewares).to.throw(Error); });
     });
 
     describe('Custom bare extending classes', () => {
-        it('Extend BaseAuthentication', () => {
-            new BaseMockAuthentication().authenticate()
-                .then(result => expect(result).to.be.resolved);
-        });
-
         it('Extend BasePolicy', () => {
-            new BaseMockPolicy().setPolicy()
+            new BaseMockMiddleware().execute()
                 .then(result => expect(result).to.be.resolved);
         });
     });

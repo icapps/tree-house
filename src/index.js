@@ -2,14 +2,12 @@ import 'babel-polyfill';
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import http from 'http';
-import https from 'https';
-import fs from 'fs';
 import cors from 'cors';
 import RateLimit from 'express-rate-limit';
 
 // Constants configuration
 import DEFAULT_APPLICATION_CONFIG from './lib/config';
+import ProcessConfig from './process-config';
 
 // Router
 import Router from './lib/router/Router';
@@ -150,41 +148,11 @@ class TreeHouse {
 
 
     /**
-     * Get HTTPS credentials
-     * Read out the private key and certificate
-     * @returns
-     *
-     * @memberof TreeHouse
-     */
-    getHttpsCredentials() {
-        if (this.configuration.https.privateKey && this.configuration.https.certificate) {
-            try {
-                const privateKey = fs.readFileSync(this.configuration.https.privateKey, 'utf8');
-                const certificate = fs.readFileSync(this.configuration.https.certificate, 'utf8');
-                return { key: privateKey, cert: certificate };
-            } catch (e) {
-                throw new Error(e);
-            }
-        } else {
-            throw new Error('No private key and/or certificate found required for HTTPS server');
-        }
-    }
-
-
-    /**
-     * Start up ExpressJS server
+     * Start up project/server
      */
     fireUpEngines() {
-        const httpServer = http.createServer(this.express);
-        httpServer.listen(this.configuration.port);
-        console.log(`TreeHouse HTTP NodeJS Server listening on port ${this.configuration.port}`);
-
-        // HTTPS - Optional
-        if (this.configuration.https) {
-            const httpsServer = https.createServer(this.getHttpsCredentials(), this.express);
-            httpsServer.listen(this.configuration.https.port);
-            console.log(`TreeHouse HTTPS NodeJS Server listening on port ${this.configuration.https.port}`);
-        }
+        // Create a new process config and fire up the application
+        new ProcessConfig().start(this.express, this.configuration);
     }
 
 
