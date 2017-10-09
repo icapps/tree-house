@@ -1,6 +1,5 @@
 import { BaseController, BaseService, BaseMiddleware, TreeError } from '../../src/index';
 
-
 /**
  * A middleware class with just its super class methods and variables
  * @export

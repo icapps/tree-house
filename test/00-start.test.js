@@ -8,20 +8,28 @@ import { MockController, BaseMockMiddleware, MockMiddleware } from './lib/helper
 should();
 
 // CONSTANTS
-const CONFIGURATION = { port: 5000,
+const CONFIGURATION = {
+    port: 5000,
     bodyLimit: '10mb',
     apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
     basePath: process.env.BASE_PATH || '/api/v1',
     workers: 2,
     cors: { optionsSuccessStatus: 200 },
-    limiter: { trustProxy: false,
+    limiter: {
+        trustProxy: false,
         windowMs: 25 * 60 * 1000,
         max: 150,
-        delayMs: 100 } };
+        delayMs: 100,
+    },
+};
 
-const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, { https: { certificate: 'test/assets/test-ssl.cert',
+const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, {
+    https: {
+        certificate: 'test/assets/test-ssl.cert',
         privateKey: 'test/assets/test-ssl.key',
-        port: 5001 } });
+        port: 5001,
+    },
+});
 
 const mockRequest = supertest(`http://localhost:${CONFIGURATION.port}${CONFIGURATION.basePath}`);
 
@@ -74,9 +82,9 @@ describe('New instance of a TreeHouse server', () => {
     });
 
 
-    describe('Custom Router and Policies', () => {
+    describe('Custom Router and middleware', () => {
         it('Set a route manually without express router set', () => { expect(new Route().setRoute).to.throw(Error); });
-        it('Set policies manually without express router set', () => { expect(new Route().setMiddlewares).to.throw(Error); });
+        it('Set middleware manually without express router set', () => { expect(new Route().setMiddlewares).to.throw(Error); });
     });
 
     describe('Custom bare extending classes', () => {
@@ -87,7 +95,7 @@ describe('New instance of a TreeHouse server', () => {
     });
 
     describe('API Calls', () => {
-       it('Get current user via route with mock policy', (done) => {
+        it('Get current user via route with mock middleware', (done) => {
             mockRequest.get('/user')
                 .expect(200)
                 .end((err, res) => {

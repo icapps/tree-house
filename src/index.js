@@ -6,25 +6,26 @@ import cors from 'cors';
 import RateLimit from 'express-rate-limit';
 
 // Constants configuration
-import DEFAULT_APPLICATION_CONFIG from './lib/config';
-import ProcessConfig from './process-config';
+import DEFAULT_APPLICATION_CONFIG from './config/application.config';
+import ProcessConfig from './config/process.config';
 
 // Router
-import Router from './lib/router/Router';
-import Route from './lib/router/Route';
+import Router from './lib/router/router';
+import Route from './lib/router/route';
 
 // Error handler and errors
-import ErrorHandler from './lib/handlers/ErrorHandler';
-import BadRequestError from './lib/errors/BadRequest';
-import ServerError from './lib/errors/ServerError';
-import UnauthorisedError from './lib/errors/Unauthorised';
+import ErrorHandler from './lib/handlers/errorHandler';
+import BadRequestError from './lib/errors/badRequest';
+import ServerError from './lib/errors/serverError';
+import UnauthorisedError from './lib/errors/unauthorised';
 
 // Base
-import BaseController from './lib/base/BaseController';
-import BaseError from './lib/base/BaseError';
-import BaseMiddleware from './lib/base/BaseMiddleware';
-import BaseService from './lib/base/BaseService';
-import BaseErrorHandler from './lib/base/BaseErrorHandler';
+import BaseController from './lib/base/baseController';
+import BaseError from './lib/base/baseError';
+import BaseMiddleware from './lib/base/baseMiddleware';
+import BaseService from './lib/base/baseService';
+import BaseErrorHandler from './lib/base/baseErrorHandler';
+
 
 // Register all default predefined errors and combine them into a TreeError object
 const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError };
@@ -152,7 +153,6 @@ class TreeHouse {
      * @param {Boolean} clustered Start the application in clustered mode or regular mode
      */
     fireUpEngines(clustered = true) {
-        // Create a new process config and fire up the application
         new ProcessConfig().start(this.express, this.configuration, clustered);
     }
 

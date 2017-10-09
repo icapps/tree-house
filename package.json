@@ -16,7 +16,6 @@
     "lint"
   ],
   "dependencies": {
-    "awilix": "^2.8.1",
     "body-parser": "~1.18.2",
     "bunyan": "^1.8.10",
     "cluster": "^0.7.7",

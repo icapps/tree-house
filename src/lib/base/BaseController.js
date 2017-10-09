@@ -1,5 +1,5 @@
-import ResponseHandler from '../handlers/ResponseHandler';
-import ErrorHandler from '../handlers/ErrorHandler';
+import ResponseHandler from '../handlers/responseHandler';
+import ErrorHandler from '../handlers/errorHandler';
 
 export default class BaseController {
     constructor() {
