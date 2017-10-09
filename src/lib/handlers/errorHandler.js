@@ -1,4 +1,4 @@
-import BaseErrorHandler from '../base/BaseErrorHandler';
+import BaseErrorHandler from '../base/baseErrorHandler';
 
 export default class ErrorHandler extends BaseErrorHandler {
     /**
