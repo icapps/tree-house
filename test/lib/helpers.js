@@ -17,9 +17,9 @@ export class BaseMockMiddleware extends BaseMiddleware {}
  * @extends {BasePolicy}
  */
 export class MockMiddleware extends BaseMiddleware {
-    execute(req) {
-        return Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
-    }
+  execute(req) {
+    return Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
+  }
 }
 
 
@@ -31,21 +31,21 @@ export class MockMiddleware extends BaseMiddleware {
  * @extends {BaseService}
  */
 export class MockService extends BaseService {
-    getUser(currentUser) {
-        return { user: currentUser };
-    }
+  getUser(currentUser) {
+    return { user: currentUser };
+  }
 
-    sendServerError() {
-        throw new TreeError.Server();
-    }
+  sendServerError() {
+    throw new TreeError.Server();
+  }
 
-    sendUnauthorised() {
-        throw new TreeError.Unauthorised();
-    }
+  sendUnauthorised() {
+    throw new TreeError.Unauthorised();
+  }
 
-    sendBadRequest() {
-        throw new TreeError.BadRequest();
-    }
+  sendBadRequest() {
+    throw new TreeError.BadRequest();
+  }
 }
 
 /**
@@ -56,13 +56,13 @@ export class MockService extends BaseService {
  * @extends {BaseController}
  */
 export class MockController extends BaseController {
-    constructor() {
-        super();
-        this.mockService = new MockService();
-    }
+  constructor() {
+    super();
+    this.mockService = new MockService();
+  }
 
-    getUser = (res, req) => this.execute(res, this.mockService.getUser(req.session.user));
-    sendServerError = res => this.execute(res, this.mockService.sendServerError());
-    sendUnauthorised = res => this.execute(res, this.mockService.sendUnauthorised());
-    sendBadRequest = res => this.execute(res, this.mockService.sendBadRequest());
+  getUser = (res, req) => this.execute(res, this.mockService.getUser(req.session.user));
+  sendServerError = res => this.execute(res, this.mockService.sendServerError());
+  sendUnauthorised = res => this.execute(res, this.mockService.sendUnauthorised());
+  sendBadRequest = res => this.execute(res, this.mockService.sendBadRequest());
 }

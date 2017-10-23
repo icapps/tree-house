@@ -1,13 +1,13 @@
 export default class BaseLogger {
-    info() { }
+  info() {}
 
-    warn() { }
+  warn() {}
 
-    debug() { }
+  debug() {}
 
-    error() { }
+  error() {}
 
-    fatal() { }
+  fatal() {}
 
-    trace() { }
+  trace() {}
 }

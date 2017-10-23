@@ -14,14 +14,13 @@ const errorController = new ErrorController();
 
 // Actual routes
 const ROUTES = [
-    // User controller routes
-    new Route('POST', '/login', userController.login),
-    new Route('GET', '/currentUser', userController.getUser, [IsAuthenticated]),
+  // User controller routes
+  new Route('POST', '/login', userController.login),
+  new Route('GET', '/currentUser', userController.getUser, [IsAuthenticated]),
 
-    // Error controller routes
-    new Route('GET', '/unauthorised', errorController.unauthorised),
-    new Route('GET', '/badRequest', errorController.badRequest),
+  // Error controller routes
+  new Route('GET', '/unauthorised', errorController.unauthorised),
+  new Route('GET', '/badRequest', errorController.badRequest),
 ];
-
 
 export default ROUTES;

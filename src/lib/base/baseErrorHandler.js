@@ -1,3 +1,3 @@
 export default class BaseErrorHandler {
-    execute() {}
+  execute() {}
 }
