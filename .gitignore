@@ -41,5 +41,11 @@ build
 
 # Linter
 .eslintcache
+
+#Editor
 .idea
+.vscode
+
+#Npm / yarn
 package-lock.json
+yarn.lock
