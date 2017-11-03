@@ -23,7 +23,16 @@ NodeJS project using ExpressJS to create an easy, secure and customisable API la
 | bodyLimit     | Limit used for body-parser      |   10mb |
 | apiKey | An api key mapped to `process.env` to use throughout the application      |    ga9ul2!MN36nyh64z4d5SC70jS |
 | basePath | The base path used to access all api routes      |   `process.env.BASE_PATH || '/api/v1' ` |
-|https| Configuration if you wish to start up an https server | `false`
+|https| Configuration if you wish to start up an https server | `false` |
+|workers| Number of workers in cluster mode|2|
+| limiter    | Rate limiter | `   {` |
+|       | | ` 	trustProxy: true,`                    |
+|       |  | ` 	windowMs: 15 * 60 * 1000,` |
+|       |  | ` 	max: 100`                 |
+|       |  | ` 	delayMs: 0 // disabled  `                |
+|       | | `}`                             |
+
+ export default DEFAULT_APPLICATION_CONFIG;
 
 
 #####You can create a configuration object with own preferences and set this later on. See below in *Basic Setup*.
@@ -82,22 +91,20 @@ import { BaseController } from 'tree-house';
 export class MyController extends BaseController {
     constructor() {
         super();
-        this.myService = new MyService();      // Needed to use functions from this service
+        this.myService = new MyService();  // Needed to use functions from this service
     }
 
 	// Get all employees
-    getAllEmployees = (req, res) => this.execute(res, this.myService.getEmployees());
+    getAllEmployees = (res, req) => this.execute(res, this.myService.getEmployees(res.body));
 }
 
 ```
-> You need to make sure all functions declared in a controller that are being used by a route are automatically bound to the context of their Controller class by using `fnName = (req, res) => { logic here... }`. Dont't use `fn(req,res) { logic here... }`.
+> You need to make sure all functions declared in a controller that are being used by a route are automatically bound to the context of their Controller class by using `fnName = (res, req) => { logic here... }`. Dont't use `fn(res, req) { logic here... }`.
 
 > If you don't use this specific syntax, you won't be able to reference to `this` as the context of the `MyController` class. It will have become an instance of the `Route` class which won't allow you to call `this.execute()` or even `this.myService.getEmployees()`.
 
 #### Services
-All services need to extend from `BaseService` which provides a few custom errors with corresponding response codes you can throw at any given moment.
-
-> It is required to return a promise if you wish to invoke the function in a controller as declared above.
+All services need to extend from `BaseService`.
 
 ```
 import { BaseService } from 'tree-house';
@@ -113,18 +120,19 @@ export class MyService extends BaseService {
 
 #### Middleware
 All middleware needs to extend from `BaseMiddleware` which only provides one function:
-`execute(req, res)`
+`execute(req, res, next)`
 
 ```
-import { passportAuthentication } from './main'; // Instance created via module tree-house-authentication
+import { jwtAuthentication } from './main'; // Instance created via module tree-house-authentication
 import { BaseMiddleware } from 'tree-house';
 
-export class MyPolicy extends BaseMiddleware {
-    execute(req, res) {
-        return passportAuthentication.authenticate(req, 'jwt')
+export class IsAuthenticated extends BaseMiddleware {
+    execute(req, res, next) {
+        jwtAuthentication.authenticate(req.headers('Authorization'))
             .then((user) => {
                 if (!user) throw new TreeError.Unauthorised();
-                return Object.assign(req, { session: { me: user } });
+                Object.assign(req, { session: { me: user } });
+                next();
             });
     }
 }
@@ -139,17 +147,18 @@ You need to create an array consisting of `Route` objects. A Route object has fo
 - HTTP method
 - Path of the route (will be prepended by basePath from the configuration)
 - Function to call when the route gets triggered
-- Array of policies (middleware that gets called before the function above) - *optional*
+- Array of middleware (gets called in order before the function above) - *optional*
 
 ```
 import { Route } from 'tree-house';
 import { MyController } from './myController';
-import { MyMiddlewareToExecute } from './myMiddlewareToExecute';
+import { MyMiddleware } from './myMiddleware';
 
 const myController = new MyController();
+const myMiddleware = new MyMiddleware();
             
 const myRoutes = [
-    new Route('GET', '/employees', myController.getAllEmployees, [MyMiddlewareToExecute])
+    new Route('GET', '/employees', myController.getAllEmployees, [myMiddleware])
 ```
 
 #### Set routes onto the main application
@@ -161,7 +170,7 @@ application.setRoutes(myRoutes);
 Install the `tree-house-authentication` module using `npm install tree-house-authentication`.
 
 #### Error handler
-There is a default error handler built in, but you can provide your own custom error handler if you want to. The only requirement is that it will need to extend from `BaseErrorHandler` and have an `execute(res, error){}` function.
+There is a default error handler built in, but you can provide your own custom error handler if you want to. The only requirement is that it will need to extend from `BaseErrorHandler` and have an `execute(error, req, res, next){}` function. This is just a basic express error middleware implementation.
 
 Example:
 
@@ -169,9 +178,13 @@ Example:
 import { BaseErrorHandler } from 'tree-house';
 
 export default class MyCustomErrorHandler extends BaseErrorHandler {
-    execute(res, error) {
-        res.status(error.statusCode);
-        res.json({ errorMessage: error.message, errorCode: error.code });
+    execute(req, res, next) {
+      if (err.statusCode) {
+        res.status(err.statusCode);
+        res.json({ errorMessage: err.message, errorCode: err.code });
+      } else {
+        next(err);
+      }
     }
 }
 ```
@@ -180,6 +193,8 @@ export default class MyCustomErrorHandler extends BaseErrorHandler {
 const myCustomErrorHandler = new MyCustomErrorHandler();
 application.setErrorHandler(myCustomErrorHandler);
 ```
+
+> Make sure to set the error handler before setting the routes!
 
 #### Errors
 All errors need to extend from `BaseError`. Treehouse provides some errors out of the box, and you can import them via `import { TreeError } from 'tree-house'`.
@@ -190,14 +205,20 @@ throw new TreeError.BadRequest('This is a bad request', 'BAD_REQUEST');
       
 throw new TreeError.Unauthorised('You are not authorized to perform this action', 'NOT_AUTHORISED';
       
-throw new TreeError.ServerError('Something went wrong', 'SERVER_ERR');
+throw new TreeError.Server('Something went wrong', 'SERVER_ERROR');
+
+throw new TreeError.NotFound('The resource could not be found.', 'NOT_FOUND');
+
+throw new TreeError.Validation('Validation error', 'INVALID_REQUEST');
 ```
 ##### Predefined errors:
 | Error           | Default Message   | Default code  | Status |
 |:--------- |:-----------|:------|:---------|
 | BadRequest    		| This call is not valid, and thereby a bad request. | BAD_REQUEST | 400 |
 | Unauthorised     | You are not authorised to make this call.      |  NOT_AUTHORISED | 401 |
-| ServerError | Something went wrong. Our technicians are working on it! | SERVER_ERR |500 |
+| NotFound | The resource could not be found. | NOT_FOUND | 404 |
+| Server | Something went wrong. Our technicians are working on it! | SERVER_ERROR | 500 |
+| Validation | Validation error. | INVALID_REQUEST | 400 |
 
 
 #### Fire up them engines!
@@ -206,6 +227,10 @@ Start up the expressJS server after you've configured everything:
 ```
 application.fireUpEngines()
 ```
+
+#### Cluster mode
+The application will start in cluster mode by default.
+You can disable this by starting the application via `application.fireUpEngines(false)`.
 
 #### Use the instance throughout the application
 It's best to use the same instance you've created in your main file throughout your whole application. The best way to achieve this is exporting the instance via `module.exports`:
@@ -229,7 +254,7 @@ Example code is provided in the `examples` folder.
   
 ## Tests
 
-  You can run `npm test` or `npm run cover` to run all tests and get a coverage report.
+  You can run `npm test` or `npm run test:cover` to run all tests and get a coverage report.
   
 ## BUGS
 
