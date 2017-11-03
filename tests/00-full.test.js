@@ -22,8 +22,8 @@ const CONFIGURATION = {
 
 const FULL_CONFIGURATION = Object.assign({}, CONFIGURATION, {
   https: {
-    certificate: 'test/assets/test-ssl.cert',
-    privateKey: 'test/assets/test-ssl.key',
+    certificate: 'tests/assets/test-ssl.cert',
+    privateKey: 'tests/assets/test-ssl.key',
     port: 5001,
   },
 });
@@ -37,15 +37,16 @@ let routes = [];
 
 describe('Initialise things before running application', () => {
   describe('Controllers and routes', () => {
-    it('Create a new controller', () => {
+    test('Create a new controller', () => {
       mockController = new MockController();
     });
 
-    it('Create new routes from controller', () => {
+    test('Create new routes from controller', () => {
       const { getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
 
       routes = [
-        new Route('GET', '/user', getUser, [MockMiddleware]),
+        new Route('GET', '/user', getUser, [new MockMiddleware()]),
+        new Route('GET', '/user-invalid-middleware', getUser, [new MockMiddleware(true)]),
         new Route('GET', '/serverError', sendServerError),
         new Route('GET', '/unauthorised', sendUnauthorised),
         new Route('GET', '/badRequest', sendBadRequest),
@@ -54,24 +55,24 @@ describe('Initialise things before running application', () => {
   });
 });
 
-xdescribe('New instance of a TreeHouse server', () => {
+describe('New instance of a TreeHouse server', () => {
   describe('Initial setup', () => {
-    it('Create new instance with the provided configuration', () => {
+    test('Create new instance with the provided configuration', () => {
       newApplication = new TreeHouse(CONFIGURATION);
-      expect(newApplication.configuration).to.eql(CONFIGURATION);
+      expect(newApplication.configuration).toEqual(CONFIGURATION);
 
       newApplication.setConfiguration(FULL_CONFIGURATION);
-      expect(newApplication.configuration).to.eql(FULL_CONFIGURATION);
+      expect(newApplication.configuration).toEqual(FULL_CONFIGURATION);
 
-      return expect(newApplication.router).not.to.be.empty;
+      expect(newApplication.router).not.toBeUndefined();
     });
 
-    it('Set Routes', () => {
+    test('Set Routes', () => {
       newApplication.setRoutes(routes);
-      return expect(newApplication.router.getRoutes()).not.to.be.empty;
+      expect(newApplication.router.getRoutes()).toHaveLength(routes.length);
     });
 
-    it('Fire up the application', () => {
+    test('Fire up the application', () => {
       // Export the main application instance
       module.exports.main = newApplication;
       newApplication.fireUpEngines(false);
@@ -80,8 +81,8 @@ xdescribe('New instance of a TreeHouse server', () => {
 
 
   describe('Custom Router and middleware', () => {
-    it('Set a route manually without express router set', () => { expect(new Route().setRoute).to.throw(Error); });
-    it('Set middleware manually without express router set', () => { expect(new Route().setMiddlewares).to.throw(Error); });
+    it('Set a route manually without express router set', () => { expect(new Route().setRoute).toThrowError(Error); });
+    it('Set middleware manually without express router set', () => { expect(new Route().setMiddlewares).toThrowError(Error); });
   });
 
   describe('Custom bare extending classes', () => {
@@ -92,13 +93,22 @@ xdescribe('New instance of a TreeHouse server', () => {
   });
 
   describe('API Calls', () => {
-    it('Get current user via route with mock middleware', (done) => {
+    it('Should return 200 response with current user via route with mock middleware', (done) => {
       mockRequest.get('/user')
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.body).toEqual({ user: { name: 'iCappsTestUser' } });
           return done();
+        });
+    });
+    it('Should return 401 response when unauthorised via middleware', (done) => {
+      mockRequest.get('/user-invalid-middleware')
+        .expect(401)
+        .end((err, res) => {
+          expect(res.body).toHaveProperty('errorCode', 'NOT_AUTHORISED');
+          expect(res.body).toHaveProperty('errorMessage');
+          done();
         });
     });
     it('Get the unauthorized response', (done) => {

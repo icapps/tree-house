@@ -11,28 +11,41 @@ export class BaseMockMiddleware extends BaseMiddleware {}
 
 /**
  * A basic middleware using the provided authentication method
- *
+ * Fake a timeout for asynchronous operations
  * @export
  * @class MockMiddleware
  * @extends {BasePolicy}
  */
 export class MockMiddleware extends BaseMiddleware {
-  execute(req) {
-    return Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
+  constructor(isInvalidMock = false) {
+    super();
+    this.isInvalidMock = isInvalidMock;
+  }
+
+  execute(req, res, next) {
+    if (this.isInvalidMock) throw new TreeError.Unauthorised('Not an authorised request');
+    setTimeout(() => {
+      Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
+      next();
+    }, 1000);
   }
 }
 
 
 /**
  * A service extending from BaseService
- *
+ * Use timeout to fake an asynchrous operation
  * @export
  * @class MockService
  * @extends {BaseService}
  */
 export class MockService extends BaseService {
   getUser(currentUser) {
-    return { user: currentUser };
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ user: currentUser });
+      }, 500);
+    });
   }
 
   sendServerError() {
