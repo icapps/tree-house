@@ -19,4 +19,13 @@ export default class UserService extends BaseService {
   getUser(currentUser) {
     return { user: currentUser };
   }
+
+
+  /**
+   * Create a new user
+   * @param {Object} values
+   */
+  createUser(values) {
+    return { values };
+  }
 }

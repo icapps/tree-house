@@ -3,19 +3,18 @@ import BaseErrorHandler from '../base/baseErrorHandler';
 export default class ErrorHandler extends BaseErrorHandler {
   /**
    * Pass an Error to an Express response
+   * @param {any} err
+   * @param {any} req
    * @param {any} res
-   * @param {any} error
+   * @param {any} next
    * @memberOf ErrorHandler
    */
-  execute(res, error) {
-    if (!res.headersSent) {
-      if (error.statusCode) {
-        res.status(error.statusCode);
-        res.json({ errorMessage: error.message, errorCode: error.code });
-      } else {
-        res.status(500);
-        res.send(error);
-      }
+  execute(err, req, res, next) { // eslint-disable-line no-unused-vars
+    if (err.statusCode) {
+      res.status(err.statusCode);
+      res.json({ errorMessage: err.message, errorCode: err.code });
+    } else {
+      next(err);
     }
   }
 }

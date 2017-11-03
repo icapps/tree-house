@@ -56,12 +56,6 @@ class TreeHouse {
     this.setRateLimit();
     this.setHeaders();
     this.setRouter();
-
-    // Set our error handler to overwrite express error handler
-    this.express.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-      if (res.headersSent) return next(err);
-      return this.errorHandler.execute(res, err);
-    });
   }
 
 
@@ -161,6 +155,9 @@ class TreeHouse {
    * @param {Boolean} clustered Start the application in clustered mode or regular mode
    */
   fireUpEngines(clustered = true) {
+     // Set the express error handler
+    this.express.use(this.errorHandler.execute);
+
     new ProcessConfig().start(this.express, this.configuration, clustered);
   }
 

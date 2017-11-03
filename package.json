@@ -1,6 +1,6 @@
 {
   "name": "tree-house",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.7",
   "description": "NodeJS project using ExpressJS to create an easy, secure and customisable API layer",
   "main": "./build/index.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "eslint-plugin-node": "^5.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^4.0.1",
+    "mock-express-response": "^0.2.1",
     "pre-commit": "^1.2.2",
     "supertest": "^3.0.0"
   },

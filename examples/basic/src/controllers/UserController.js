@@ -24,6 +24,15 @@ export default class UserController extends BaseController {
 
 
   /**
+   * Create a new user
+   * @param {Response} res express response
+   * @param {Request} req express request
+   * @returns {Promise}
+   */
+  createUser = (res, req) => this.execute(res, this.userService.createUser(req.body));
+
+
+  /**
    * Send an unauthorised response
    * @param {Response} res express response
    * @returns {Promise}

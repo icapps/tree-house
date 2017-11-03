@@ -24,7 +24,7 @@ export default class Route {
         try {
           await this.fn(res, req); // Pass request as second parameter because not all controllers will use the request
         } catch (error) {
-          errorHandler.execute(res, error);
+          errorHandler.execute(error, req, res, () => {});
         }
       });
     } else {
