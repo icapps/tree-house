@@ -8,12 +8,14 @@ export default class ErrorHandler extends BaseErrorHandler {
    * @memberOf ErrorHandler
    */
   execute(res, error) {
-    if (error.statusCode) {
-      res.status(error.statusCode);
-      res.json({ errorMessage: error.message, errorCode: error.code });
-    } else {
-      res.status(500);
-      res.send(error);
+    if (!res.headersSent) {
+      if (error.statusCode) {
+        res.status(error.statusCode);
+        res.json({ errorMessage: error.message, errorCode: error.code });
+      } else {
+        res.status(500);
+        res.send(error);
+      }
     }
   }
 }
