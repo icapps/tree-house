@@ -16,9 +16,10 @@ module.exports = {
     'js',
     'json',
   ],
-  testRegex: '/tests/.*\\.(ts|tsx|js)$',
+  testRegex: '/tests/[^lib].*\\.(ts|tsx|js)$',
   mapCoverage: true,
   coveragePathIgnorePatterns: [
     '/node_modules/',
+    'src/lib/base',
   ],
 };

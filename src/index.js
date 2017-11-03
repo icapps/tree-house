@@ -33,9 +33,11 @@ import BaseErrorHandler from './lib/base/baseErrorHandler';
 const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError, NotFound: NotFoundError, Validation: ValidationError };
 
 class TreeHouse {
-  constructor(configuration) {
+  constructor(configuration, diContainer = null) {
     this.configuration = Object.assign({}, DEFAULT_APPLICATION_CONFIG, configuration);
     this.router = new Router();
+
+    this.diContainer = diContainer; // Dependency injection container
 
     // Default error handler
     this.errorHandler = new ErrorHandler();

@@ -26,6 +26,10 @@ export default class UserService extends BaseService {
    * @param {Object} values
    */
   createUser(values) {
-    return { values };
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(values);
+      }, 5000);
+    });
   }
 }

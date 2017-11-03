@@ -41,11 +41,9 @@ export default class Route {
   setMiddlewares(router, basePath) {
     if (router) {
       this.middlewares.forEach((middleware) => {
-        router.use(`${basePath}${this.url}`, async (req, res, next) => {
-          // Try to execute middleware function and handle any thrown errors
+        router.use(`${basePath}${this.url}`, (req, res, next) => {
           try {
-            await middleware.execute(req, res, next);
-            next(); // Execute next if not called yet
+            middleware.execute(req, res, next);
           } catch (error) {
             next(error); // Pass error to express
           }

@@ -8,6 +8,6 @@ export default class IsValidated extends BaseMiddleware {
   }
 
   execute(req, res, next) {
-    return this.validator(req, res, next);
+    this.validator(req, res, next);
   }
 }

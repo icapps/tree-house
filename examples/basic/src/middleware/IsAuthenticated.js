@@ -7,12 +7,10 @@ export default class IsAuthenticated extends BaseMiddleware {
    * @param {any} req
    * @returns {Promise}
    */
-  execute(req) {
-    return new Promise((resolve) => {
-      // Mock request
-      setTimeout(() => {
-        resolve(Object.assign(req, { session: { user: { name: 'Brent Van Geertruy' } } }));
-      }, 5000);
-    });
+  execute(req, res, next) {
+    setTimeout(() => {
+      Object.assign(req, { session: { user: { name: 'Brent Van Geertruy' } } });
+      next();
+    }, 3000);
   }
 }
