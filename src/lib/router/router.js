@@ -20,7 +20,7 @@ export default class Router {
    */
   setExpressRoutes(routes, basePath, errorHandler) {
     routes.forEach((route) => {
-      route.setMiddlewares(this.expressRouter, basePath, errorHandler);
+      route.setMiddlewares(this.expressRouter, basePath);
       route.setRoute(this.expressRouter, basePath, errorHandler);
     });
   }

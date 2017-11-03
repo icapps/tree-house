@@ -18,6 +18,8 @@ import ErrorHandler from './lib/handlers/errorHandler';
 import BadRequestError from './lib/errors/badRequest';
 import ServerError from './lib/errors/serverError';
 import UnauthorisedError from './lib/errors/unauthorised';
+import NotFoundError from './lib/errors/notFound';
+import ValidationError from './lib/errors/validation';
 
 // Base
 import BaseController from './lib/base/baseController';
@@ -28,7 +30,7 @@ import BaseErrorHandler from './lib/base/baseErrorHandler';
 
 
 // Register all default predefined errors and combine them into a TreeError object
-const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError };
+const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError, NotFound: NotFoundError, Validation: ValidationError };
 
 class TreeHouse {
     constructor(configuration) {
@@ -54,6 +56,11 @@ class TreeHouse {
         this.setRateLimit();
         this.setHeaders();
         this.setRouter();
+
+        // Set our error handler to overwrite express error handler
+        this.express.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+          this.errorHandler.execute(res, err);
+        });
     }
 
 

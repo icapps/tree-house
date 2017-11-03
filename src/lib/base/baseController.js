@@ -1,10 +1,8 @@
 import ResponseHandler from '../handlers/responseHandler';
-import ErrorHandler from '../handlers/errorHandler';
 
 export default class BaseController {
   constructor() {
     this.responseHandler = new ResponseHandler();
-    this.errorHandler = new ErrorHandler();
   }
 
 
@@ -20,7 +18,7 @@ export default class BaseController {
       const result = await fn;
       this.responseHandler.execute(res, result);
     } catch (error) {
-      this.errorHandler.execute(res, error);
+      throw error; // Rethrow error - debug if needed...
     }
   }
 }

@@ -1,6 +1,3 @@
-// TODO: Set via initial configuration on application level
-const BASE_PATH = process.env.BASE_PATH || '/api/v1';
-
 // Basic Route
 export default class Route {
   /**
@@ -23,8 +20,7 @@ export default class Route {
    */
   setRoute(router, basePath, errorHandler) {
     if (router) {
-      router[this.type.toLowerCase()](`${BASE_PATH}${this.url}`, async (req, res) => {
-        // Try to execute controller function and handle any thrown errors
+      router[this.type.toLowerCase()](`${basePath}${this.url}`, async (req, res) => {
         try {
           await this.fn(res, req); // Pass request as second parameter because not all controllers will use the request
         } catch (error) {
@@ -41,21 +37,17 @@ export default class Route {
    * Set middleware(s) on an express route
    * @param router - ExpressJS router instance
    * @param {String} basePath path used to prefix on every route
-   * @param errorHandler - Error handler
    */
-  setMiddlewares(router, basePath, errorHandler) {
+  setMiddlewares(router, basePath) {
     if (router) {
-      this.middlewares.forEach((Middleware) => {
-        router.use(`${BASE_PATH}${this.url}`, async (req, res, next) => {
-          const middleware = new Middleware();
-
+      this.middlewares.forEach((middleware) => {
+        router.use(`${basePath}${this.url}`, async (req, res, next) => {
           // Try to execute middleware function and handle any thrown errors
           try {
-            await middleware.execute(req, res);
-            next();
+            await middleware.execute(req, res, next);
+            next(); // Execute next if not called yet
           } catch (error) {
-            console.log('ERRORRRR', error);
-            errorHandler.execute(res, error);
+            next(error); // Pass error to express
           }
         });
       });

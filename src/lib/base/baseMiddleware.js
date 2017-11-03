@@ -5,7 +5,7 @@ export default class BaseMiddleware {
    * @param {Response} res express response
    * @returns {Promise}
    */
-  execute(req, res) {
-    return Promise.resolve({ req, res });
+  execute(req, res, next) {
+    return Promise.resolve({ req, res, next });
   }
 }

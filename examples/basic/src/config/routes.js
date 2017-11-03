@@ -12,11 +12,14 @@ import ErrorController from '../controllers/ErrorController';
 const userController = new UserController();
 const errorController = new ErrorController();
 
+// Initiate the middleware
+const isAuthenticated = new IsAuthenticated();
+
 // Actual routes
 const ROUTES = [
   // User controller routes
   new Route('POST', '/login', userController.login),
-  new Route('GET', '/currentUser', userController.getUser, [IsAuthenticated]),
+  new Route('GET', '/currentUser', userController.getUser, [isAuthenticated]),
 
   // Error controller routes
   new Route('GET', '/unauthorised', errorController.unauthorised),
