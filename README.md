@@ -169,6 +169,7 @@ application.setRoutes(myRoutes);
 #### Authentication
 Install the `tree-house-authentication` module using `npm install tree-house-authentication`.
 
+
 #### Error handler
 There is a default error handler built in, but you can provide your own custom error handler if you want to. The only requirement is that it will need to extend from `BaseErrorHandler` and have an `execute(error, req, res, next){}` function. This is just a basic express error middleware implementation.
 
@@ -248,6 +249,14 @@ import { application } from './main';
 	application.getConfiguration();
 	...
 ```
+
+## Swagger integration
+We provide swagger integration out of the box using `swagger-ui-express`. We only support **YAML** files at the moment to be served. You can call this function as many times as you want, when you have multiple swagger definitions or wish to use multiple routes for example.
+
+```
+application.setDocumentation('/route-to-docs', 'path-to-your-yaml-file');
+```
+
 ## Examples
 
 Example code is provided in the `examples` folder.

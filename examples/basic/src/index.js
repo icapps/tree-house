@@ -17,11 +17,13 @@ function init() {
     // Set the correct stuff onto the application instance
     app.setRoutes(ROUTES);
 
-    // Export the instance to use throughout the project
-    module.exports.app = app;
+    app.setDocumentation('/documentation', 'documentation/swagger.yml');
 
     // Fire up the server
     app.fireUpEngines();
+
+    // Export the instance to use throughout the project
+    module.exports.app = app;
 }
 
 

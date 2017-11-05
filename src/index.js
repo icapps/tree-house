@@ -28,6 +28,8 @@ import BaseMiddleware from './lib/base/baseMiddleware';
 import BaseService from './lib/base/baseService';
 import BaseErrorHandler from './lib/base/baseErrorHandler';
 
+// Helpers
+import serveSwagger from './lib/helpers/documentation.helper';
 
 // Register all default predefined errors and combine them into a TreeError object
 const TreeError = { BadRequest: BadRequestError, Server: ServerError, Unauthorised: UnauthorisedError, NotFound: NotFoundError, Validation: ValidationError };
@@ -153,11 +155,21 @@ class TreeHouse {
 
 
   /**
+   * Set documentation on a specific route with a provided yaml file
+   * @param {String} route
+   * @param {String} filePath
+   */
+  setDocumentation(route, filePath) {
+    serveSwagger(this.express, `${this.configuration.basePath}${route}`, filePath);
+  }
+
+
+  /**
    * Start up project/server
    * @param {Boolean} clustered Start the application in clustered mode or regular mode
    */
   fireUpEngines(clustered = true) {
-     // Set the express error handler
+    // Set the express error handler
     this.express.use(this.errorHandler.execute);
 
     new ProcessConfig().start(this.express, this.configuration, clustered);
