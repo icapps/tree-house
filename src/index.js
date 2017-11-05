@@ -158,9 +158,10 @@ class TreeHouse {
    * Set documentation on a specific route with a provided yaml file
    * @param {String} route
    * @param {String} filePath
+   * @param {Object} properties
    */
-  setDocumentation(route, filePath) {
-    serveSwagger(this.express, `${this.configuration.basePath}${route}`, filePath);
+  setDocumentation(route, filePath, properties = {}) {
+    serveSwagger(this.express, `${this.configuration.basePath}${route}`, filePath, properties);
   }
 
 

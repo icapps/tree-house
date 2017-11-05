@@ -254,7 +254,11 @@ import { application } from './main';
 We provide swagger integration out of the box using `swagger-ui-express`. We only support **YAML** files at the moment to be served. You can call this function as many times as you want, when you have multiple swagger definitions or wish to use multiple routes for example.
 
 ```
-application.setDocumentation('/route-to-docs', 'path-to-your-yaml-file');
+const properties = {
+  host: '',
+  schemes: [],
+}
+application.setDocumentation('/route-to-docs', 'path-to-your-yaml-file', properties);
 ```
 
 ## Examples
