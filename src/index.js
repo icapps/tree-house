@@ -27,6 +27,7 @@ import BaseError from './lib/base/baseError';
 import BaseMiddleware from './lib/base/baseMiddleware';
 import BaseService from './lib/base/baseService';
 import BaseErrorHandler from './lib/base/baseErrorHandler';
+import BaseLogger from './lib/base/baseLogger';
 
 // Helpers
 import serveSwagger from './lib/helpers/documentation.helper';
@@ -199,5 +200,6 @@ module.exports = {
   BaseError,
   BaseMiddleware,
   BaseService,
+  BaseLogger,
   TreeError,
 };
