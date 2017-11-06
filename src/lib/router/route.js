@@ -11,7 +11,6 @@ export default class Route {
     Object.assign(this, { type, url, fn, middlewares });
   }
 
-
   /**
    * Set function on an express route
    * @param router - ExpressJS router instance

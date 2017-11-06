@@ -42,10 +42,11 @@ describe('Initialise things before running application', () => {
     });
 
     test('Create new routes from controller', () => {
-      const { getUser, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
+      const { getUser, getUserArrowFn, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
 
       routes = [
         new Route('GET', '/user', getUser, [new MockMiddleware()]),
+        new Route('GET', '/user-inline', getUserArrowFn, [new MockMiddleware()]),
         new Route('GET', '/user-invalid-middleware', getUser, [new MockMiddleware(true)]),
         new Route('GET', '/serverError', sendServerError),
         new Route('GET', '/unauthorised', sendUnauthorised),
@@ -95,6 +96,15 @@ describe('New instance of a TreeHouse server', () => {
   describe('API Calls', () => {
     it('Should return 200 response with current user via route with mock middleware', (done) => {
       mockRequest.get('/user')
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.body).toEqual({ user: { name: 'iCappsTestUser' } });
+          return done();
+        });
+    });
+    it('Should return 200 response with current user via route with mock middleware', (done) => {
+      mockRequest.get('/user-inline')
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);

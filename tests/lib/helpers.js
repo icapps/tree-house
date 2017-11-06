@@ -75,6 +75,10 @@ export class MockController extends BaseController {
   }
 
   getUser = (res, req) => this.execute(res, this.mockService.getUser(req.session.user));
+  getUserArrowFn = (res, req) => this.execute(res, () => new Promise((resolve) => {
+    resolve({ user: req.session.user });
+  }));
+
   sendServerError = res => this.execute(res, this.mockService.sendServerError());
   sendUnauthorised = res => this.execute(res, this.mockService.sendUnauthorised());
   sendBadRequest = res => this.execute(res, this.mockService.sendBadRequest());
