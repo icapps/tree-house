@@ -202,15 +202,15 @@ All errors need to extend from `BaseError`. Treehouse provides some errors out o
 
 
 ```
-throw new TreeError.BadRequest('This is a bad request', 'BAD_REQUEST');
+throw new TreeError.BadRequest('BAD_REQUEST', 'This is a bad request');
       
-throw new TreeError.Unauthorised('You are not authorized to perform this action', 'NOT_AUTHORISED';
+throw new TreeError.Unauthorised('NOT_AUTHORISED', 'You are not authorized to perform this action');
       
-throw new TreeError.Server('Something went wrong', 'SERVER_ERROR');
+throw new TreeError.Server('SERVER_ERROR', 'Something went wrong');
 
-throw new TreeError.NotFound('The resource could not be found.', 'NOT_FOUND');
+throw new TreeError.NotFound('NOT_FOUND', 'The resource could not be found.');
 
-throw new TreeError.Validation('Validation error', 'INVALID_REQUEST');
+throw new TreeError.Validation('INVALID_REQUEST', 'Validation error');
 ```
 ##### Predefined errors:
 | Error           | Default Message   | Default code  | Status |

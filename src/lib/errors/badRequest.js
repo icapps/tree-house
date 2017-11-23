@@ -1,7 +1,7 @@
 import BaseError from '../base/baseError';
 
 export default class BadRequestError extends BaseError {
-  constructor(message = 'This call is not valid, and thereby a bad request.', code = 'BAD_REQUEST') {
+  constructor(code = 'BAD_REQUEST', message = 'This call is not valid, and thereby a bad request.') {
     super(message);
     this.statusCode = 400;
     this.code = code;

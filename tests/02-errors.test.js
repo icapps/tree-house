@@ -13,7 +13,7 @@ describe('#Errors', () => {
   });
 
   test('Should consist of a custom bad error request code', async () => {
-    const error = new BadRequestError('This is a bad request', 'MY_CUSTOM_BAD');
+    const error = new BadRequestError('MY_CUSTOM_BAD', 'This is a bad request');
     expect(error).toHaveProperty('statusCode', 400);
     expect(error).toHaveProperty('code', 'MY_CUSTOM_BAD');
     expect(error).toHaveProperty('message', 'This is a bad request');
@@ -27,7 +27,7 @@ describe('#Errors', () => {
   });
 
   test('Should consist of a custom bad request error code', async () => {
-    const error = new NotFoundError('Not found', 'MY_CUSTOM_NF');
+    const error = new NotFoundError('MY_CUSTOM_NF', 'Not found');
     expect(error).toHaveProperty('statusCode', 404);
     expect(error).toHaveProperty('code', 'MY_CUSTOM_NF');
     expect(error).toHaveProperty('message', 'Not found');
@@ -41,7 +41,7 @@ describe('#Errors', () => {
   });
 
   test('Should consist of a custom server error code', async () => {
-    const error = new ServerError('ServerErr', 'CUSTOM_SERVER_ERROR');
+    const error = new ServerError('CUSTOM_SERVER_ERROR', 'ServerErr');
     expect(error).toHaveProperty('statusCode', 500);
     expect(error).toHaveProperty('code', 'CUSTOM_SERVER_ERROR');
     expect(error).toHaveProperty('message', 'ServerErr');
@@ -55,7 +55,7 @@ describe('#Errors', () => {
   });
 
   test('Should consist of a custom unauthorised code', async () => {
-    const error = new UnauthorisedError('UnauthCustom', 'CUSTOM_UNAUTHORISED');
+    const error = new UnauthorisedError('CUSTOM_UNAUTHORISED', 'UnauthCustom');
     expect(error).toHaveProperty('statusCode', 401);
     expect(error).toHaveProperty('code', 'CUSTOM_UNAUTHORISED');
     expect(error).toHaveProperty('message', 'UnauthCustom');
@@ -69,7 +69,7 @@ describe('#Errors', () => {
   });
 
   test('Should consist of a custom validation code', async () => {
-    const error = new ValidationError('invalidCustom', 'CUSTOM_INVALID');
+    const error = new ValidationError('CUSTOM_INVALID', 'invalidCustom');
     expect(error).toHaveProperty('statusCode', 400);
     expect(error).toHaveProperty('code', 'CUSTOM_INVALID');
     expect(error).toHaveProperty('message', 'invalidCustom');

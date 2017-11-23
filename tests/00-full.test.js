@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 
 import { TreeHouse, Route } from '../src/index';
-import { MockController, BaseMockMiddleware, MockMiddleware } from './lib/helpers';
+import { MockController, BaseMockMiddleware, MockMiddleware, MockSecondMiddleware } from './lib/helpers';
 
 
 // CONSTANTS
@@ -42,10 +42,11 @@ describe('Initialise things before running application', () => {
     });
 
     test('Create new routes from controller', () => {
-      const { getUser, getUserArrowFn, sendServerError, sendUnauthorised, sendBadRequest } = mockController;
+      const { getUser, getUserArrowFn, sendServerError, sendUnauthorised, sendBadRequest, createUser } = mockController;
 
       routes = [
         new Route('GET', '/user', getUser, [new MockMiddleware()]),
+        new Route('POST', '/user', createUser, [new MockSecondMiddleware()]),
         new Route('GET', '/user-inline', getUserArrowFn, [new MockMiddleware()]),
         new Route('GET', '/user-invalid-middleware', getUser, [new MockMiddleware(true)]),
         new Route('GET', '/serverError', sendServerError),
@@ -99,10 +100,12 @@ describe('New instance of a TreeHouse server', () => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
+
           expect(res.body).toEqual({ user: { name: 'iCappsTestUser' } });
           return done();
         });
     });
+
     it('Should return 200 response with current user via route with mock middleware', (done) => {
       mockRequest.get('/user-inline')
         .expect(200)
@@ -112,6 +115,7 @@ describe('New instance of a TreeHouse server', () => {
           return done();
         });
     });
+
     it('Should return 401 response when unauthorised via middleware', (done) => {
       mockRequest.get('/user-invalid-middleware')
         .expect(401)
@@ -121,6 +125,17 @@ describe('New instance of a TreeHouse server', () => {
           done();
         });
     });
+
+    it('Should return 200 response with current user via route', (done) => {
+      mockRequest.post('/user')
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.body).toEqual({ user: { name: 'iCappsTestUserCreate' } });
+          return done();
+        });
+    });
+
     it('Get the unauthorized response', (done) => {
       mockRequest.get('/unauthorised')
         .expect(401, done);

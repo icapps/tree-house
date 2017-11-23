@@ -17,14 +17,14 @@ describe('#Handlers', () => {
 
   test('Should return a valid tree error via response', () => {
     const errorHandler = new ErrorHandler();
-    const unauthorisedError = new UnauthorisedError('You are not authorised');
+    const unauthorisedError = new UnauthorisedError('NOT_AUTH', 'You are not authorised');
     const response = new MockExpressResponse();
 
     errorHandler.execute(unauthorisedError, new MockExpressRequest(), response);
 
     expect(response._getJSON()).toEqual({
       errorMessage: 'You are not authorised',
-      errorCode: 'NOT_AUTHORISED',
+      errorCode: 'NOT_AUTH',
     });
   });
 

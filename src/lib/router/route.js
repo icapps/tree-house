@@ -40,7 +40,7 @@ export default class Route {
   setMiddlewares(router, basePath) {
     if (router) {
       this.middlewares.forEach((middleware) => {
-        router.use(`${basePath}${this.url}`, (req, res, next) => {
+        router[this.type.toLowerCase()](`${basePath}${this.url}`, (req, res, next) => {
           try {
             middleware.execute(req, res, next);
           } catch (error) {

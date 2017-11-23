@@ -23,11 +23,19 @@ export class MockMiddleware extends BaseMiddleware {
   }
 
   execute(req, res, next) {
-    if (this.isInvalidMock) throw new TreeError.Unauthorised('Not an authorised request');
+    if (this.isInvalidMock) throw new TreeError.Unauthorised('NOT_AUTHORISED', 'Not an authorised request');
     setTimeout(() => {
       Object.assign(req, { session: { user: { name: 'iCappsTestUser' } } });
       next();
     }, 1000);
+  }
+}
+
+
+export class MockSecondMiddleware extends BaseMiddleware {
+  execute(req, res, next) {
+    Object.assign(req, { session: { user: { name: 'iCappsTestUserCreate' } } });
+    next();
   }
 }
 
@@ -46,6 +54,10 @@ export class MockService extends BaseService {
         resolve({ user: currentUser });
       }, 500);
     });
+  }
+
+  createUser(currentUser) {
+    return { user: currentUser };
   }
 
   sendServerError() {
@@ -78,6 +90,8 @@ export class MockController extends BaseController {
   getUserArrowFn = (res, req) => this.execute(res, () => new Promise((resolve) => {
     resolve({ user: req.session.user });
   }));
+
+  createUser = (res, req) => this.execute(res, this.mockService.createUser(req.session.user));
 
   sendServerError = res => this.execute(res, this.mockService.sendServerError());
   sendUnauthorised = res => this.execute(res, this.mockService.sendUnauthorised());
