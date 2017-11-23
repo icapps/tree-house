@@ -8,7 +8,7 @@ describe('#Errors', () => {
   test('Should consist of a default bad error request code and statusCode', async () => {
     const error = new BadRequestError();
     expect(error).toHaveProperty('statusCode', 400);
-    expect(error).toHaveProperty('code', 'BAD_REQUEST');
+    expect(error).toHaveProperty('code', 300);
     expect(error).toHaveProperty('message');
   });
 
@@ -22,7 +22,7 @@ describe('#Errors', () => {
   test('Should consist of a default not found error code and statusCode', async () => {
     const error = new NotFoundError();
     expect(error).toHaveProperty('statusCode', 404);
-    expect(error).toHaveProperty('code', 'NOT_FOUND');
+    expect(error).toHaveProperty('code', 200);
     expect(error).toHaveProperty('message');
   });
 
@@ -36,7 +36,7 @@ describe('#Errors', () => {
   test('Should consist of a default not found error code and statusCode', async () => {
     const error = new ServerError();
     expect(error).toHaveProperty('statusCode', 500);
-    expect(error).toHaveProperty('code', 'SERVER_ERROR');
+    expect(error).toHaveProperty('code', 0);
     expect(error).toHaveProperty('message');
   });
 
@@ -50,7 +50,7 @@ describe('#Errors', () => {
   test('Should consist of a default unauthorised error code and statusCode', async () => {
     const error = new UnauthorisedError();
     expect(error).toHaveProperty('statusCode', 401);
-    expect(error).toHaveProperty('code', 'NOT_AUTHORISED');
+    expect(error).toHaveProperty('code', 100);
     expect(error).toHaveProperty('message');
   });
 
@@ -64,7 +64,7 @@ describe('#Errors', () => {
   test('Should consist of a default validation error code and statusCode', async () => {
     const error = new ValidationError();
     expect(error).toHaveProperty('statusCode', 400);
-    expect(error).toHaveProperty('code', 'INVALID_REQUEST');
+    expect(error).toHaveProperty('code', 400);
     expect(error).toHaveProperty('message');
   });
 
