@@ -6,6 +6,7 @@ import { MockController, BaseMockMiddleware, MockMiddleware, MockSecondMiddlewar
 
 // CONSTANTS
 const CONFIGURATION = {
+  title: 'Tree House',
   port: 5000,
   bodyLimit: '10mb',
   apiKey: 'ga9ul2!MN36nyh64z4d5SC70jS',
