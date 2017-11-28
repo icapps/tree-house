@@ -56,6 +56,10 @@ class TreeHouse {
    */
   initExpressJS() {
     this.express = express();
+    this.express.get('/', (req, res) => {
+      res.send(`<h3>${this.configuration.title} up and running</h3>`);
+    });
+
     this.setSecurity();
     this.setBodyParser();
     this.setRateLimit();

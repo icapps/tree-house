@@ -1,4 +1,5 @@
  const DEFAULT_APPLICATION_CONFIG = {
+   title: 'Tree House',
    port: process.env.PORT || 3000,
    basePath: process.env.BASE_PATH || '/api/v1',
    bodyLimit: '10mb',
