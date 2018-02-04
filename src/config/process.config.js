@@ -28,6 +28,8 @@ export default class processConfig {
     const workers = process.env.WORKERS || configuration.workers || os.cpus().length;
 
     console.log('start cluster with %s workers', workers);
+
+  // FIXME: This doesn't work... !!!!!
     [workers].forEach(() => {
       const worker = cluster.fork().process;
       console.log('worker %s started.', worker.pid);
