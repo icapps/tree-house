@@ -116,7 +116,7 @@ function getAllUsers(req, res) {
   // if an unhandled error occurs this will be passed onto the Express error handler instead of raising an UnhandledPromiseRejectionError
 }
 
-app.use('/users', handleAsyncFn(getAllUsers));
+app.use('/users', treehouse.handleAsyncFn(getAllUsers));
 ```
 
 ## Server
