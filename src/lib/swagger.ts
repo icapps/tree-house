@@ -7,11 +7,11 @@ import * as fs from 'fs';
 /**
  * Serve swagger documentation
  */
-export default function setSwagger(app: Application, route: string, filePath: string, properties: SwaggerOptions): void {
+export default function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions): void {
   try {
     // Load yaml document
     const swaggerDocument = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
-    Object.assign(swaggerDocument, properties);
+    Object.assign(swaggerDocument, options);
 
     // Serve the document served via swagger-ui
     app.use(route, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
