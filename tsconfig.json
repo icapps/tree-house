@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "typeRoots": ["node_modules/@types"],
+    "declaration": true,
+
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": false,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "types/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "build"
+  ]
+}

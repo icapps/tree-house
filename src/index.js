@@ -177,7 +177,6 @@ class TreeHouse {
   fireUpEngines(clustered = true) {
     // Set the express error handler
     this.express.use(this.errorHandler.execute);
-
     new ProcessConfig().start(this.express, this.configuration, clustered);
   }
 

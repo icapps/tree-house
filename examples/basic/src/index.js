@@ -8,6 +8,7 @@ const APP_CONFIGURATION = {
     bodyLimit: '10mb',
     apiKey: 'ga9ul2!dsf321;3122',
     basePath: process.env.BASE_PATH || '/api/v1',
+    title: 'Basic example',
 };
 
 function init() {
