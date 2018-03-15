@@ -27,6 +27,7 @@ describe('Express', () => {
       expect(status).toEqual(204);
     });
   });
+
   describe('#setBasicSecurity', () => {
     let app;
     beforeEach(() => {
@@ -49,6 +50,7 @@ describe('Express', () => {
       expect(headers).toHaveProperty('access-control-allow-origin');
     });
   });
+
   describe('#setBodyParser', () => {
     let app;
     beforeEach(() => {
@@ -77,6 +79,7 @@ describe('Express', () => {
       expect(headers).toHaveProperty('content-type');
     });
   });
+
   describe('#setRateLimiter', () => {
     let app;
     beforeEach(() => {
@@ -107,6 +110,5 @@ describe('Express', () => {
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);
     });
-
   });
 });

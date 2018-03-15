@@ -18,7 +18,7 @@ describe('Responder', () => {
       app.get('/hello', responder.handleAsyncFn(fn));
     });
 
-    test('handleAsyncFn catches error', async () => {
+    test('should catch an error', async () => {
       const { status, body } = await request(app).get('/hello');
       expect(status).toEqual(500);
       expect(body).toEqual('Something went wrong! 💩');
@@ -36,7 +36,7 @@ describe('Responder', () => {
       app.get('/helloAsync', responder.handleAsyncFn(fn));
     });
 
-    test('handleAsyncFn catches async error', async () => {
+    test('should catch an async error', async () => {
       const { status, body, error } = await request(app).get('/helloAsync');
       expect(status).toEqual(500);
       expect(body).toEqual('Something went wrong! 💩💩');
