@@ -4,7 +4,6 @@ const express = require('express');
 
 // CONSTANTS
 const CONFIGURATION = {
-  title: 'Tree House',
   port: 3000,
   https: {
     certificate: 'tests/assets/test-ssl.cert',
@@ -28,6 +27,7 @@ describe('Initialise things before running application', () => {
     });
     test('start http server should throw error on invalid https configuration', async () => {
       const WRONG_CONFIGURATION = Object.assign({}, CONFIGURATION, {
+        title: 'Tree House',
         port: 5000,
         https: {
           certificate: 'test/assets/random.cert',

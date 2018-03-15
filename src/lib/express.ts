@@ -1,10 +1,10 @@
 import { Application } from 'express';
-import { ClientOpts } from 'redis';
+import { ClientOpts, RedisClient } from 'redis';
 import * as ExpressBrute from 'express-brute';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as bodyParser from 'body-parser';
-import * as defaults from '../config/appConfig';
+import * as defaults from '../config/app.config';
 const redisStore = require('express-brute-redis');
 
 
@@ -71,7 +71,7 @@ export function setRateLimiter(app: Application, route: string, options: RateLim
 
 // Interfaces
 export interface RateLimiterOptions extends ExpressBrute.Options {
-  redis?: ClientOpts;
+  redis?: RedisOptions;
 }
 
 export interface SecurityOptions {
@@ -84,4 +84,8 @@ export interface BodyParserOptions {
   raw?: bodyParser.Options;
   text?: bodyParser.OptionsText;
   urlEncoded?: bodyParser.OptionsUrlencoded;
+}
+
+export interface RedisOptions extends ClientOpts {
+  client?: RedisClient;
 }

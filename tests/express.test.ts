@@ -1,5 +1,6 @@
 import { setLocalHeaders, setBasicSecurity, setBodyParser, setRateLimiter } from '../src/lib/express';
 const request = require('supertest-as-promised');
+const redisMock = require('redis-mock');
 const express = require('express');
 
 describe('Express', () => {
@@ -86,7 +87,6 @@ describe('Express', () => {
       setRateLimiter(app, '/');
       app.use('/', (req, res) => res.status(200).send('Welcome'));
     });
-
     test('rateLimiter should return 429 on too many tries', async () => {
       setRateLimiter(app, '/', { minWait: 5000, freeRetries: 1 });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
@@ -98,5 +98,15 @@ describe('Express', () => {
       const { status: status3 } = await request(app).get('/');
       expect(status3).toEqual(429);
     });
+    test('rateLimiter with custom redisStore', async () => {
+      const redisClient = redisMock.createClient();
+
+      setRateLimiter(app, '/', { redis: { client: redisClient } });
+      app.use('/', (req, res) => res.status(200).send('Welcome'));
+
+      const { status } = await request(app).get('/');
+      expect(status).toEqual(200);
+    });
+
   });
 });
