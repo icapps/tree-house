@@ -154,6 +154,8 @@ treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
 });
 ```
 
+- [All available swagger-ui options](https://github.com/swagger-api/swagger-ui)
+
 ## Tests
 
 - You can run `yarn test` to run all tests
