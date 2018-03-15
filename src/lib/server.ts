@@ -31,7 +31,7 @@ function getHttpsCredentials(certificate: string, privateKey: string): { key: st
     const cert = fs.readFileSync(certificate, 'utf8');
     return { key, cert };
   } catch (e) {
-    throw new Error(e);
+    throw new Error(`Something went wrong while fetching keys: ${e}`);
   }
 }
 
