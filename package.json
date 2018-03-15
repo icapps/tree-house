@@ -51,6 +51,16 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "contributors": [
+    {
+      "name": "Willem Horsten",
+      "email": "willem.horsten@icapps.com"
+    },
+    {
+      "name": "Brent Van Geertruy",
+      "email": "brent.vangeertruy@icapps.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/icapps/tree-house.git"
@@ -62,7 +72,6 @@
     "Secure",
     "Customisable"
   ],
-  "author": "Brent Van Geertruy <brentvangeertruy@outlook.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/icapps/tree-house/issues"
