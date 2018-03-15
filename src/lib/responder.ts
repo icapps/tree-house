@@ -6,8 +6,6 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
  */
 export function handleAsyncFn(fnToExecute: (request: Request, response: Response, next?: NextFunction) => any): RequestHandler {
   return async (request, response, next) => {
-    console.log('hi');
-
     try {
       await fnToExecute(request, response, next);
     } catch (error) {
