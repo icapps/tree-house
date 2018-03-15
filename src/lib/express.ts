@@ -29,7 +29,7 @@ export function setLocalHeaders(app: Application, route: string): void {
 /**
  * Set some basic security measurements
  */
-export function setBasicSecurity(app: Application, route: string, options: SecurityOptions): void {
+export function setBasicSecurity(app: Application, route: string, options: SecurityOptions = {}): void {
   app.use(route, helmet(Object.assign({}, defaults.helmetOptions, options.helmet)));
   app.use(route, cors(Object.assign({}, defaults.corsOptions, options.cors)));
 }
@@ -38,7 +38,7 @@ export function setBasicSecurity(app: Application, route: string, options: Secur
 /**
  * Set a body parser for all specific types at once
  */
-export function setBodyParser(app: Application, route: string, options: BodyParserOptions): void {
+export function setBodyParser(app: Application, route: string, options: BodyParserOptions = {}): void {
   const allOptions = Object.assign({}, defaults.bodyParserOptions, options);
 
   if (allOptions.json) app.use(route, bodyParser.json(allOptions.json));
@@ -54,7 +54,7 @@ export function setBodyParser(app: Application, route: string, options: BodyPars
  */
 
 // TODO: Research whether trust proxy for Heroku is required
-export function setRateLimiter(app: Application, route: string, options: RateLimiterOptions): void {
+export function setRateLimiter(app: Application, route: string, options: RateLimiterOptions = {}): void {
   let store: ExpressBrute.MemoryStore;
   const allOptions = Object.assign({}, defaults.rateLimiterOptions, options);
 

@@ -4,14 +4,6 @@ const express = require('express');
 const app = express();
 
 describe('Swagger', () => {
-  beforeEach(() => {
-    app.use((err, req, res, next) => {
-      console.log('err', err);
-
-      return res.status(500).json(err.message);
-    });
-  });
-
   describe('#setSwagger', () => {
     test('successfully open swagger', async () => {
       setSwagger(app, '/documentation', './tests/assets/docs.yml');

@@ -30,7 +30,7 @@ describe('Responder', () => {
       const fn = (req, res) => {
         return new Promise((resolve, reject) => setTimeout(() => {
           reject(new Error('Something went wrong! 💩💩'));
-        }, 3000));
+        }, 2000));
       };
 
       app.get('/helloAsync', responder.handleAsyncFn(fn));

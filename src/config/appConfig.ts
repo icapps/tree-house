@@ -23,7 +23,7 @@ export const corsOptions = {
 
 // Rate limiter
 export const rateLimiterOptions = {
-  freeRetries: 15 * 60 * 1000, // 15 minutes
+  freeRetries: 15,
   lifetime: 24 * 60 * 60, // 1 day (seconds not milliseconds)
   redis: null,
 };
