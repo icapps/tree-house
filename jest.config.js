@@ -4,23 +4,25 @@ module.exports = {
   notify: false,
   coverageThreshold: {
     global: {
-      branches: 75,
-      functions: 75,
-      lines: 75,
-      statements: 75,
-    },
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
+    }
   },
   moduleFileExtensions: [
-    'ts',
-    'tsx',
-    'js',
-    'json',
+    "ts",
+    "tsx",
+    "js",
+    "json"
   ],
-  testRegex: '/tests/[^lib].*\\.(ts|tsx|js)$',
-  mapCoverage: true,
+  transform: {
+    "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+  },
+  testRegex: "/tests/.*\\.(ts|tsx|js)$",
   coveragePathIgnorePatterns: [
     '/node_modules/',
-    'src/lib/base',
-    'src/lib/helpers',
+    'src/index.ts',
+    'src/config',
   ],
 };
