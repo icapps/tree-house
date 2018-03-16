@@ -141,7 +141,7 @@ treehouse.startServer(app, {
 
 ## Swagger
 
-### setSwagger(app, route, filePath, options)
+### setSwagger(app, route, filePath, options, callbackFn (optional))
 
 Serve Swagger UI via the a provided Swagger yaml file.
 
@@ -151,7 +151,7 @@ const app = express();
 treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
   host: 'localhost:3000',
   schemes: ['http'],
-});
+};
 ```
 
 - [All available swagger-ui options](https://github.com/swagger-api/swagger-ui)
