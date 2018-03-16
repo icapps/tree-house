@@ -1,14 +1,14 @@
+import * as express from 'express';
+import * as request from 'supertest-as-promised';
 import { startServer } from '../src/lib/server';
-const request = require('supertest-as-promised');
-const express = require('express');
 
 // CONSTANTS
 const CONFIGURATION = {
-  port: 3000,
+  port: 4000,
   https: {
     certificate: 'tests/assets/test-ssl.cert',
     privateKey: 'tests/assets/test-ssl.key',
-    port: 3001,
+    port: 4001,
   },
 };
 
@@ -40,6 +40,7 @@ describe('Initialise things before running application', () => {
         title: 'Tree House',
         port: 5000,
         https: {
+          port: 5001,
           certificate: 'test/assets/random.cert',
           privateKey: 'test/assets/random.key',
         },
