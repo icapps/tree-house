@@ -7,7 +7,7 @@ import * as fs from 'fs';
 /**
  * Start an http/https server from the given Express instance
  */
-export function startServer(app: Application, options: ServerOptions): void {
+export function startServer(app: Application, options: ServerOptions, callbackFn?: Function): void {
   const httpServer = http.createServer(app);
   httpServer.listen(options.port);
   console.log(`${options.title || 'TreeHouse'} HTTP NodeJS Server listening on port ${options.port}`);
@@ -18,6 +18,9 @@ export function startServer(app: Application, options: ServerOptions): void {
     httpsServer.listen(options.https.port);
     console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
   }
+
+  // Optional callback function
+  if (callbackFn) callbackFn();
 }
 
 

@@ -15,16 +15,26 @@ const CONFIGURATION = {
 describe('Initialise things before running application', () => {
   describe('#startServer', () => {
     let app;
+
     beforeEach(() => {
       app = express();
     });
-    test('start http server', async () => {
+
+    test('should start http server', async () => {
       startServer(app, CONFIGURATION);
 
       app.use('/', (req, res) => res.json('welcome'));
       const response = await request(app).get('/');
       expect(response.status).toEqual(200);
     });
+
+
+    test('should start http server with provided callbackFn', async () => {
+      const mockFn = jest.fn();
+      startServer(app, { port: 5003 }, mockFn);
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
     test('start http server should throw error on invalid https configuration', async () => {
       const WRONG_CONFIGURATION = Object.assign({}, CONFIGURATION, {
         title: 'Tree House',
@@ -35,6 +45,7 @@ describe('Initialise things before running application', () => {
         },
       });
       expect.assertions(2);
+
       try {
         startServer(app, WRONG_CONFIGURATION);
       } catch (err) {
