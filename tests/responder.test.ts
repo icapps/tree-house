@@ -1,6 +1,6 @@
+import * as request from 'supertest-as-promised';
+import * as express from 'express';
 import * as responder from './../src/lib/responder';
-const request = require('supertest-as-promised');
-const express = require('express');
 const app = express();
 
 describe('Responder', () => {

@@ -7,7 +7,7 @@ import * as fs from 'fs';
 /**
  * Serve swagger documentation
  */
-export default function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): void {
+export function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): void {
   try {
     // Load yaml document
     const swaggerDocument = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
