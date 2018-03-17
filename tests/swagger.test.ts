@@ -1,6 +1,6 @@
 import * as request from 'supertest-as-promised';
 import * as express from 'express';
-import { setSwagger } from './../src/lib/swagger';
+import { setSwagger } from './../src';
 const app = express();
 
 describe('Swagger', () => {

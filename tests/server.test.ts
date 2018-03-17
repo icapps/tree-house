@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as request from 'supertest-as-promised';
-import { startServer } from '../src/lib/server';
+import { startServer } from '../src';
 
 // CONSTANTS
 const CONFIGURATION = {
