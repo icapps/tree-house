@@ -121,7 +121,7 @@ app.use('/users', treehouse.handleAsyncFn(getAllUsers));
 
 ## Server
 
-### startServer(app, options)
+### startServer(app, options, callbackFn (optional))
 
 Start an http or https server using an express instance
 
@@ -141,7 +141,7 @@ treehouse.startServer(app, {
 
 ## Swagger
 
-### setSwagger(app, route, filePath, options, callbackFn (optional))
+### setSwagger(app, route, filePath, options)
 
 Serve Swagger UI via the a provided Swagger yaml file.
 
