@@ -156,6 +156,24 @@ treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
 
 - [All available swagger-ui options](https://github.com/swagger-api/swagger-ui)
 
+## Validator
+
+### validateSchema(schema, options)
+
+Express middleware to validate a Joi schema using the `express-validation` module. This will throw an error as an instance of ExpressValidationError if the Joi validation fails.
+
+```javascript
+const schema =   {
+  body: {
+    name: Joi.string().required(),
+  }
+};
+
+app.post('/my-endpoint', treehouse.validateSchema(schema), ...);
+```
+
+- [All available express-validation options](https://github.com/AndrewKeig/express-validation)
+
 ## Tests
 
 - You can run `yarn test` to run all tests

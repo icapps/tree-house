@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as request from 'supertest-as-promised';
+import * as request from 'supertest';
 import { startServer } from '../src';
 
 // CONSTANTS

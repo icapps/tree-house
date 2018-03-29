@@ -1,4 +1,4 @@
-import * as request from 'supertest-as-promised';
+import * as request from 'supertest';
 import * as express from 'express';
 const redisMock = require('redis-mock');
 import { setLocalHeaders, setBasicSecurity, setBodyParser, setRateLimiter } from '../src';
