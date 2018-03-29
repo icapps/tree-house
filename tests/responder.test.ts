@@ -1,4 +1,4 @@
-import * as request from 'supertest-as-promised';
+import * as request from 'supertest';
 import * as express from 'express';
 import * as responder from './../src';
 const app = express();
