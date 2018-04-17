@@ -28,6 +28,7 @@ export interface SwaggerOptions {
   customCss?: string;
   explorer?: boolean;
   host?: string;
+  basePath?: string;
   schemes?: string[];
   swaggerOptions?: {
     validatorUrl?: string | null,
