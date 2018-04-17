@@ -14,7 +14,7 @@
     "test:watch": "jest --watchAll",
     "pretest": "yarn build",
     "prepublish": "yarn build",
-    "release": "node_modules/np/cli.js"
+    "release": "node_modules/np/cli.js --no-cleanup"
   },
   "precommit": [
     "lint"
