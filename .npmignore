@@ -29,6 +29,7 @@ coverage/
 .npm
 .npmignore
 package-lock.json
+.nvmrc
 
 # Yarn
 .yarnclean
@@ -38,3 +39,8 @@ yarn-error.log
 
 # Travis
 .travis.yml
+
+# Licenses
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+HISTORY.md
