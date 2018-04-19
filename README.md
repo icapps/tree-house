@@ -33,18 +33,6 @@ import * as treehouse from 'tree-house'
 
 ## Security
 
-### setLocalHeaders(app, route)
-
-**Only for development purposes!**
-
-Set headers to allow all options calls responding with a 204. This will prevent web applications from receiving an unauthorised response when trying to send a request from localhost.
-
-```javascript
-const app = express();
-
-treehouse.setLocalHeaders(app, '*')
-```
-
 ### setBasicSecurity(app, route, options)
 
 Set some basic Express security using `cors` and `helmet`.
