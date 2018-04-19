@@ -9,24 +9,6 @@ const redisStore = require('express-brute-redis');
 
 
 /**
- * Set headers for local development (Should only be used when environment is DEVELOPMENT)
- * Fix for Chrome etc. (headers for local development)
- */
-export function setLocalHeaders(app: Application, route: string): void {
-  // Add headers
-  app.use(route, (_req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // TODO: Not best practice, allow to overwrite...
-    res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
-    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH');
-    return next();
-  });
-
-  // Headers - fix for OPTIONS calls in localhost (Chrome etc.)
-  app.use(route, (req, res, next) => (req.method.toLowerCase() === 'options' ? res.sendStatus(204) : next()));
-}
-
-
-/**
  * Set some basic security measurements
  */
 export function setBasicSecurity(app: Application, route: string, options: SecurityOptions = {}): void {

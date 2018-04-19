@@ -4,30 +4,6 @@ const redisMock = require('redis-mock');
 import { setLocalHeaders, setBasicSecurity, setBodyParser, setRateLimiter } from '../src';
 
 describe('Express', () => {
-  describe('#setLocalHeaders', () => {
-    let app;
-    beforeEach(() => {
-      app = express();
-    });
-
-    test('app should have Access-Control headers', async () => {
-      setLocalHeaders(app, '*');
-      app.use('/', (req, res) => res.status(200).send('Welcome'));
-
-      const { headers } = await request(app).get('/');
-      expect(headers).toHaveProperty('access-control-allow-origin');
-      expect(headers).toHaveProperty('access-control-allow-headers');
-      expect(headers).toHaveProperty('access-control-allow-methods');
-    });
-    test('app should return 204 on OPTIONS call', async () => {
-      setLocalHeaders(app, '*');
-      app.use('/', (req, res) => res.status(200).send('Welcome'));
-
-      const { status } = await request(app).options('/');
-      expect(status).toEqual(204);
-    });
-  });
-
   describe('#setBasicSecurity', () => {
     let app;
     beforeEach(() => {
@@ -64,6 +40,7 @@ describe('Express', () => {
       const { headers } = await request(app).get('/');
       expect(headers).toHaveProperty('content-type');
     });
+
     test('app should have content-type header (raw)', async () => {
       setBodyParser(app, '/', { raw: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
@@ -71,6 +48,24 @@ describe('Express', () => {
       const { headers } = await request(app).get('/');
       expect(headers).toHaveProperty('content-type');
     });
+
+    test('app should have content-type header (json)', async () => {
+      setBodyParser(app, '/', { json: { limit: 500 } });
+      app.use('/', (req, res) => res.status(200).json({ name: 'Welcome' }));
+
+      const { headers } = await request(app).get('/');
+      expect(headers).toHaveProperty('content-type');
+    });
+
+
+    test('app should have content-type header (urlEncoded)', async () => {
+      setBodyParser(app, '/', { json: { limit: 500 } });
+      app.use('/', (req, res) => res.status(200).send(encodeURI('Welcome')));
+
+      const { headers } = await request(app).get('/');
+      expect(headers).toHaveProperty('content-type');
+    });
+
     test('app should have content-type header (text)', async () => {
       setBodyParser(app, '/', { text: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
