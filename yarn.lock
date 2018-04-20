@@ -124,6 +124,10 @@
   dependencies:
     "@types/superagent" "*"
 
+"@types/throng@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@types/throng/-/throng-4.0.2.tgz#e352f5f86433e9dfbf3258414191852d25b2274f"
+
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -1973,10 +1977,6 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-https@~1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/https/-/https-1.0.0.tgz#3c37c7ae1a8eeb966904a2ad1e975a194b7ed3a4"
-
 hyperlinker@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/hyperlinker/-/hyperlinker-1.0.0.tgz#23dc9e38a206b208ee49bc2d6c8ef47027df0c0e"
@@ -3044,6 +3044,10 @@ locate-path@^2.0.0:
   dependencies:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
+
+lodash.defaults@^4.0.1:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
 
 lodash.reduce@4.6.0:
   version "4.6.0"
@@ -4596,6 +4600,12 @@ test-exclude@^4.1.1:
 throat@^4.0.0:
   version "4.1.0"
   resolved "https://registry.npmjs.org/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
+
+throng@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/throng/-/throng-4.0.0.tgz#983c6ba1993b58eae859998aa687ffe88df84c17"
+  dependencies:
+    lodash.defaults "^4.0.1"
 
 through@2, through@^2.3.6, through@^2.3.8:
   version "2.3.8"

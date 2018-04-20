@@ -111,7 +111,7 @@ app.use('/users', treehouse.handleAsyncFn(getAllUsers));
 
 ### startServer(app, options, callbackFn (optional))
 
-Start an http or https server using an express instance
+Start an http server using an express instance
 
 ```javascript
 const app = express();
@@ -119,11 +119,6 @@ const app = express();
 treehouse.startServer(app, {
   port: 3000,
   title: 'My app'   // optional
-  https: {          // optional
-    port: 3001,
-    privateKey: 'assets/ssl.key',
-    certificate: 'assets/ssl.cert',
-  }
 })
 ```
 
