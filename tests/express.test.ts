@@ -85,14 +85,17 @@ describe('Express', () => {
       setRateLimiter(app, '/');
       app.use('/', (req, res) => res.status(200).send('Welcome'));
     });
+    
     test('rateLimiter should return 429 on too many tries', async () => {
       setRateLimiter(app, '/', { minWait: 5000, freeRetries: 1 });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
 
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);
+
       const { status: status2 } = await request(app).get('/');
       expect(status2).toEqual(200);
+
       const { status: status3 } = await request(app).get('/');
       expect(status3).toEqual(429);
     });
