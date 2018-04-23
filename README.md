@@ -68,7 +68,7 @@ treehouse.setBodyParser(app, '*', {
 
 ### getRateLimiter(options)
 
-Get a rate limiter instance prevent brute force attacks. This can be used as a middleware in Express.
+Get a rate limiter instance to prevent brute force attacks. This can be used as a middleware in Express.
 At the moment there is support for a built in-memorystore or Redis. Both use the `express-brute` module.
 
 ```javascript
