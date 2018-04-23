@@ -5,13 +5,13 @@ const app = express();
 
 describe('Swagger', () => {
   describe('#setSwagger', () => {
-    test('successfully open swagger', async () => {
+    it('successfully open swagger', async () => {
       setSwagger(app, '/documentation', './tests/assets/docs.yml');
       const { status } = await request(app).get('/documentation');
       expect(status).toEqual(301);
     });
 
-    test('throws error on invalid filepath', async () => {
+    it('throws error on invalid filepath', async () => {
       expect.assertions(2);
       try {
         setSwagger(app, '/documentation', '../random/docs.yml');

@@ -31,12 +31,10 @@ export function setBodyParser(app: Application, route: string, options: BodyPars
 
 
 /**
- * Set a rate limiter on a specific route
+ * Get a rate limiter instance
  * Current support for: built-in memory and Redis
  */
-
-// TODO: Research whether trust proxy for Heroku is required
-export function setRateLimiter(app: Application, route: string, options: RateLimiterOptions = {}): void {
+export function getRateLimiter(options: RateLimiterOptions = {}): ExpressBrute {
   let store: ExpressBrute.MemoryStore;
   const allOptions = Object.assign({}, defaults.rateLimiterOptions, options);
 
@@ -47,7 +45,7 @@ export function setRateLimiter(app: Application, route: string, options: RateLim
   }
 
   const { redis, ...bruteOptions } = allOptions; // Filter out unneeded properties
-  app.use(route, new ExpressBrute(store, bruteOptions).prevent);
+  return new ExpressBrute(store, bruteOptions);
 }
 
 

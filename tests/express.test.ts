@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import * as express from 'express';
 const redisMock = require('redis-mock');
-import { setLocalHeaders, setBasicSecurity, setBodyParser, setRateLimiter } from '../src';
+import { setBasicSecurity, setBodyParser, getRateLimiter } from '../src';
 
 describe('Express', () => {
   describe('#setBasicSecurity', () => {
@@ -10,7 +10,7 @@ describe('Express', () => {
       app = express();
     });
 
-    test('app should have security headers', async () => {
+    it('app should have security headers', async () => {
       setBasicSecurity(app, '*');
       app.use('/', (req, res) => res.status(200).send('Welcome'));
 
@@ -33,7 +33,7 @@ describe('Express', () => {
       app = express();
     });
 
-    test('app should have content-type header', async () => {
+    it('app should have content-type header', async () => {
       setBodyParser(app, '/');
       app.use('/', (req, res) => res.status(200).send('Welcome'));
 
@@ -41,7 +41,7 @@ describe('Express', () => {
       expect(headers).toHaveProperty('content-type');
     });
 
-    test('app should have content-type header (raw)', async () => {
+    it('app should have content-type header (raw)', async () => {
       setBodyParser(app, '/', { raw: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
 
@@ -49,7 +49,7 @@ describe('Express', () => {
       expect(headers).toHaveProperty('content-type');
     });
 
-    test('app should have content-type header (json)', async () => {
+    it('app should have content-type header (json)', async () => {
       setBodyParser(app, '/', { json: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).json({ name: 'Welcome' }));
 
@@ -58,7 +58,7 @@ describe('Express', () => {
     });
 
 
-    test('app should have content-type header (urlEncoded)', async () => {
+    it('app should have content-type header (urlEncoded)', async () => {
       setBodyParser(app, '/', { json: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).send(encodeURI('Welcome')));
 
@@ -66,7 +66,7 @@ describe('Express', () => {
       expect(headers).toHaveProperty('content-type');
     });
 
-    test('app should have content-type header (text)', async () => {
+    it('app should have content-type header (text)', async () => {
       setBodyParser(app, '/', { text: { limit: 500 } });
       app.use('/', (req, res) => res.status(200).send('Welcome'));
 
@@ -75,32 +75,37 @@ describe('Express', () => {
     });
   });
 
-  describe('#setRateLimiter', () => {
+  describe('#getRateLimiter', () => {
     let app;
+
     beforeEach(() => {
       app = express();
     });
 
-    test('set default rateLimiter', async () => {
-      setRateLimiter(app, '/');
-      app.use('/', (req, res) => res.status(200).send('Welcome'));
+    it('set default rateLimiter', async () => {
+      const bruteForce = getRateLimiter();
+      app.use('/', bruteForce.prevent, (req, res) => res.status(200).send('Welcome'));
     });
-    test('rateLimiter should return 429 on too many tries', async () => {
-      setRateLimiter(app, '/', { minWait: 5000, freeRetries: 1 });
-      app.use('/', (req, res) => res.status(200).send('Welcome'));
+
+    it('rateLimiter should return 429 on too many tries', async () => {
+      const bruteForce = getRateLimiter({ minWait: 5000, freeRetries: 1 });
+      app.use('/', bruteForce.prevent, (req, res) => res.status(200).send('Welcome'));
 
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);
+
       const { status: status2 } = await request(app).get('/');
       expect(status2).toEqual(200);
+
       const { status: status3 } = await request(app).get('/');
       expect(status3).toEqual(429);
     });
-    test('rateLimiter with custom redisStore', async () => {
+
+    it('rateLimiter with custom redisStore', async () => {
       const redisClient = redisMock.createClient();
 
-      setRateLimiter(app, '/', { redis: { client: redisClient } });
-      app.use('/', (req, res) => res.status(200).send('Welcome'));
+      const bruteForce = getRateLimiter({ redis: { client: redisClient } });
+      app.use('/', bruteForce.prevent, (req, res) => res.status(200).send('Welcome'));
 
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);
