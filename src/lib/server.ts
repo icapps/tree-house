@@ -7,20 +7,53 @@ import * as fs from 'fs';
 /**
  * Start an http/https server from the given Express instance
  */
-export function startServer(app: Application, options: ServerOptions, callbackFn?: Function): void {
-  const httpServer = http.createServer(app);
-  httpServer.listen(options.port);
-  console.log(`${options.title || 'TreeHouse'} HTTP NodeJS Server listening on port ${options.port}`);
+export async function startServer(app: Application, options: ServerOptions): Promise<void> {
+  try {
+    if (options.pre) await preHook(options.pre);
 
-  // HTTPS - Optional
-  if (options.https) {
-    const httpsServer = https.createServer(getHttpsCredentials(options.https.certificate, options.https.privateKey), app);
-    httpsServer.listen(options.https.port);
-    console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
+    const httpServer = http.createServer(app);
+    httpServer.listen(options.port);
+    console.log(`${options.title || 'TreeHouse'} HTTP NodeJS Server listening on port ${options.port}`);
+
+    // HTTPS - Optional
+    if (options.https) {
+      const httpsServer = https.createServer(getHttpsCredentials(options.https.certificate, options.https.privateKey), app);
+      httpsServer.listen(options.https.port);
+      console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
+    }
+
+    // Optional callback function
+    if (options.post) await postHook(options.post);
+  } catch (error) {
+    console.error('An error occurred trying to start the server:\n', error.message);
+    throw error;
   }
+}
 
-  // Optional callback function
-  if (callbackFn) callbackFn();
+
+/**
+ * Execute a pre-hook function
+ */
+export async function preHook(fn) {
+  try {
+    await fn();
+  } catch (error) {
+    console.error('Error trying to execute the pre-hook function');
+    throw error;
+  }
+}
+
+
+/**
+ * Execute a post-hook function
+ */
+export async function postHook(fn) {
+  try {
+    await fn();
+  } catch (error) {
+    console.error('Error trying to execute the post-hook function');
+    throw error;
+  }
 }
 
 
@@ -47,6 +80,8 @@ export interface ServerOptions {
     privateKey: string;
     certificate: string;
   };
+  pre?: Function;
+  post?: Function;
 }
 
 
