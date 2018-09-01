@@ -3,7 +3,6 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-
 /**
  * Serve swagger documentation
  */
@@ -19,7 +18,6 @@ export function setSwagger(app: Application, route: string, filePath: string, op
     throw new Error(`Failed to load swagger documentation: ${e}`);
   }
 }
-
 
 // Interfaces
 export interface SwaggerOptions {

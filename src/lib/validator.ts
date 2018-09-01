@@ -14,4 +14,3 @@ export function validateSchema(schema, options = {}) {
     expressValidation(schema)(req, res, next);
   };
 }
-
