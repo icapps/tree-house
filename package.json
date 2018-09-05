@@ -1,6 +1,6 @@
 {
   "name": "tree-house",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "NodeJS utilities and handy helpers extending ExpressJS functionalities",
   "main": "build/index.js",
   "types": "build/index.d.ts",
