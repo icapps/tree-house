@@ -7,7 +7,6 @@ import * as bodyParser from 'body-parser';
 import * as defaults from '../config/app.config';
 const redisStore = require('express-brute-redis');
 
-
 /**
  * Set some basic security measurements
  */
@@ -15,7 +14,6 @@ export function setBasicSecurity(app: Application, route: string, options: Secur
   app.use(route, helmet(Object.assign({}, defaults.helmetOptions, options.helmet)));
   app.use(route, cors(Object.assign({}, defaults.corsOptions, options.cors)));
 }
-
 
 /**
  * Set a body parser for all specific types at once
@@ -28,7 +26,6 @@ export function setBodyParser(app: Application, route: string, options: BodyPars
   if (allOptions.text) app.use(route, bodyParser.text(allOptions.text));
   if (allOptions.urlEncoded) app.use(route, bodyParser.urlencoded(allOptions.urlEncoded));
 }
-
 
 /**
  * Get a rate limiter instance
@@ -47,7 +44,6 @@ export function getRateLimiter(options: RateLimiterOptions = {}): ExpressBrute {
   const { redis, ...bruteOptions } = allOptions; // Filter out unneeded properties
   return new ExpressBrute(store, bruteOptions);
 }
-
 
 // Interfaces
 export interface RateLimiterOptions extends ExpressBrute.Options {

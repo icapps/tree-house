@@ -3,7 +3,6 @@ import * as http from 'http';
 import * as https from 'https';
 import * as fs from 'fs';
 
-
 /**
  * Start an http/https server from the given Express instance
  */
@@ -30,7 +29,6 @@ export async function startServer(app: Application, options: ServerOptions): Pro
   }
 }
 
-
 /**
  * Execute a pre-hook function
  */
@@ -43,7 +41,6 @@ export async function preHook(fn) {
   }
 }
 
-
 /**
  * Execute a post-hook function
  */
@@ -55,7 +52,6 @@ export async function postHook(fn) {
     throw error;
   }
 }
-
 
 /**
  * Get HTTPS credentials
@@ -71,7 +67,6 @@ function getHttpsCredentials(certificate: string, privateKey: string): { key: st
   }
 }
 
-
 export interface ServerOptions {
   port: number;
   title?: string;
@@ -83,5 +78,3 @@ export interface ServerOptions {
   pre?: Function;
   post?: Function;
 }
-
-

@@ -1,6 +1,5 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 
-
 /**
  * Wrap an express function to handle unhandled exceptions
  */
@@ -13,4 +12,3 @@ export function handleAsyncFn(fnToExecute: (request: Request, response: Response
     }
   };
 }
-

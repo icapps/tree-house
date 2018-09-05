@@ -17,7 +17,7 @@ module.exports = {
     "json"
   ],
   transform: {
-    "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    "\\.(ts|tsx)$": "ts-jest"
   },
   testRegex: "/tests/.*\\.(ts|tsx|js)$",
   coveragePathIgnorePatterns: [

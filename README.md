@@ -174,8 +174,8 @@ app.post('/my-endpoint', treehouse.validateSchema(schema), ...);
 
 ## Tests
 
-- You can run `yarn test` to run all tests
-- You can run `yarn test:coverage` to run all tests with coverage report
+- You can run `npm run test` to run all tests
+- You can run `npm run test:coverage` to run all tests with coverage report
 
 ## Bugs
 
