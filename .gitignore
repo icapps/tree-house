@@ -24,7 +24,6 @@ node_modules
 
 # NPM
 .npm
-package-lock.json
 
 # Yarn
 .yarnclean
