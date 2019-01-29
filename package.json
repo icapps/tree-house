@@ -9,7 +9,7 @@
     "build": "npm run clean && tsc",
     "start": "npm run build && node build/index.js",
     "lint": "tslint 'src/**/*.ts'",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test:coverage": "jest --coverage --collectCoverageFrom=src/**/*.ts",
     "test:watch": "jest --watchAll",
     "pretest": "npm run build",
