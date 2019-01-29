@@ -141,14 +141,42 @@ treehouse.startServer(app, {
 
 ### setSwagger(app, route, filePath, options)
 
-Serve Swagger UI via the a provided Swagger yaml file.
+Serve Swagger UI via the a provided Swagger yaml file OR folder with valid structure and yaml files.
 
+### YAML file implementation
 ```javascript
 const app = express();
 
 treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
   host: 'localhost:3000',
   schemes: ['http'],
+};
+```
+
+- [All available swagger-ui options](https://github.com/swagger-api/swagger-ui)
+
+### Folder  implementation with valid structure
+
+Structure
+```bash
+.
+├── validFolderName
+|   ├── index.yml # contains basic info + definition models
+|   └── routes
+|          ├── route1.yml
+|          └── randomName.yml
+|          ├── ... # more yml files
+```
+
+WARNING !!: make sure index.yml contains 'paths:' at the LAST LINE
+
+```javascript
+const app = express();
+
+treehouse.setSwagger(app, '/documentation', './validFolderName', {
+  host: 'localhost:3000',
+  schemes: ['http'],
+  concatenate : true, // The property to enable folder functionality
 };
 ```
 

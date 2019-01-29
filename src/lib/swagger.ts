@@ -2,6 +2,7 @@ import { Application } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Serve swagger documentation
@@ -17,7 +18,8 @@ export function setSwagger(app: Application, route: string, filePath: string, op
         throw new Error('Boolean concatenate cannot be true when you specify a file. When you want to concatenate, specify a folder');
       }
       if (stats.isDirectory()) {
-        swaggerDocument = buildSwaggerDocumentFromFiles(filePath);
+        const swaggerContent = buildSwaggerDocumentFromFiles(filePath);
+        swaggerDocument = yaml.safeLoad(swaggerContent);
       }
     } else {
       if (stats.isFile()) {
@@ -30,8 +32,9 @@ export function setSwagger(app: Application, route: string, filePath: string, op
       }
     }
 
+    // Bugfix to host multiple swagger definitions see:
+    // https://github.com/scottie1984/swagger-ui-express/issues/92#issuecomment-454034754
     const useSchema = schema => (...args) => swaggerUi.setup(schema)(...args);
-    console.log('Testing symbolic link');
 
     // Serve the document served via swagger-ui
     app.use(route, swaggerUi.serve, useSchema(swaggerDocument));
@@ -40,8 +43,24 @@ export function setSwagger(app: Application, route: string, filePath: string, op
   }
 }
 
-function buildSwaggerDocumentFromFiles(_filePath: string) {
+function buildSwaggerDocumentFromFiles(filePath: string) {
+  let swaggerDocument = '';
+  try {
+    swaggerDocument += fs.readFileSync(path.join(filePath, 'index.yml'), 'utf8');
+  } catch (error) {
+    throw new Error(`Could not read index.yml make sure the file is named: index.yml and in the correct folder ${error}`);
+  }
 
+  try {
+    const routeFiles = fs.readdirSync(path.join(filePath, 'routes'));
+    routeFiles.forEach((file) => {
+      swaggerDocument += fs.readFileSync(path.join(filePath, 'routes', file), 'utf8');
+    });
+  } catch (error) {
+    throw new Error(`Error while reading routes folder. Make sure there is one! , ${error}`);
+  }
+
+  return swaggerDocument;
 }
 
 // Interfaces
