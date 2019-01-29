@@ -10,7 +10,7 @@
     "start": "npm run build && node build/index.js",
     "lint": "tslint 'src/**/*.ts'",
     "test": "jest --detectOpenHandles",
-    "test:coverage": "jest --coverage --collectCoverageFrom=src/**/*.ts",
+    "test:coverage": "jest --coverage --detectOpenHandles --collectCoverageFrom=src/**/*.ts",
     "test:watch": "jest --watchAll",
     "pretest": "npm run build",
     "prepare": "npm run build",
