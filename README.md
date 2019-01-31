@@ -168,12 +168,12 @@ Structure
 |          ├── ... # more yml files
 ```
 
-WARNING !!: make sure index.yml contains 'paths:' at the LAST LINE
+Example code
 
 ```javascript
 const app = express();
 
-treehouse.setSwagger(app, '/documentation', './validFolderName', {
+treehouse.setSwagger(app, '/documentation', 'documentation/validFolderName', {
   host: 'localhost:3000',
   schemes: ['http'],
   concatenate : true, // The property to enable folder functionality
