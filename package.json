@@ -14,7 +14,7 @@
     "test:watch": "jest --watchAll",
     "pretest": "npm run build",
     "prepare": "npm run build",
-    "release": "node_modules/np/cli.js --no-cleanup"
+    "release": "node_modules/np/source/cli.js --no-cleanup"
   },
   "precommit": [
     "lint"
