@@ -47,6 +47,7 @@ function buildSwaggerDocumentFromFiles(filePath: string) {
   let swaggerDocument = '';
   try {
     swaggerDocument += fs.readFileSync(path.join(filePath, 'index.yml'), 'utf8');
+    swaggerDocument += 'paths: \n';
   } catch (error) {
     throw new Error(`Could not read index.yml make sure the file is named: index.yml and in the correct folder ${error}`);
   }
