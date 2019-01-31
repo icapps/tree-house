@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as request from 'supertest';
-import { startServer } from '../src';
+import { startServer } from '../../src';
 
 // CONSTANTS
 const CONFIGURATION = {
@@ -23,11 +23,10 @@ describe('Initialise things before running application', () => {
     test('should start http server', async () => {
       startServer(app, CONFIGURATION);
 
-      app.use('/', (req, res) => res.json('welcome'));
+      app.use('/', (_req, res) => res.json('welcome'));
       const response = await request(app).get('/');
       expect(response.status).toEqual(200);
     });
-
 
     test('should start http server with provided pre-hook', async () => {
       const mockFn = jest.fn();

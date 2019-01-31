@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import * as express from 'express';
 import * as Joi from 'joi';
-import { validateSchema, setBodyParser } from './../src';
+import { validateSchema, setBodyParser } from '../../src';
 const app = express();
 
 describe('Validator', () => {
@@ -17,7 +17,7 @@ describe('Validator', () => {
     app.post('/validateTest', validateSchema(schema), respond);
 
     it('Should succesfully validate schema', async () => {
-      const { body, status } = await request(app)
+      const { status } = await request(app)
         .post('/validateTest')
         .send({ name: 'Brent' });
 
@@ -25,7 +25,7 @@ describe('Validator', () => {
     });
 
     it('Should throw error when data is invalid', async () => {
-      const { body, status } = await request(app)
+      const { status } = await request(app)
         .post('/validateTest')
         .send({ unknownProperty: 'Brent' });
 
@@ -33,7 +33,7 @@ describe('Validator', () => {
     });
 
     it('Should throw error when data is not provided', async () => {
-      const { body, status } = await request(app)
+      const { status } = await request(app)
         .post('/validateTest')
         .send({});
 
@@ -41,4 +41,3 @@ describe('Validator', () => {
     });
   });
 });
-
