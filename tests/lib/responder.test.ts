@@ -1,18 +1,18 @@
 import * as request from 'supertest';
 import * as express from 'express';
-import * as responder from './../src';
+import * as responder from '../../src';
 const app = express();
 
 describe('Responder', () => {
   beforeEach(() => {
-    app.use((err, req, res, next) => {
+    app.use((err, _req, res, _next) => {
       return res.status(500).json(err.message);
     });
   });
 
   describe('#handleFn', () => {
     beforeAll(() => {
-      const fn = (req, res) => {
+      const fn = (_req, _res) => {
         throw new Error('Something went wrong! 💩');
       };
       app.get('/hello', responder.handleAsyncFn(fn));
@@ -27,8 +27,8 @@ describe('Responder', () => {
 
   describe('#handleAsyncFn', () => {
     beforeAll(() => {
-      const fn = (req, res) => {
-        return new Promise((resolve, reject) => setTimeout(() => {
+      const fn = (_req, _res) => {
+        return new Promise((_resolve, reject) => setTimeout(() => {
           reject(new Error('Something went wrong! 💩💩'));
         }, 2000));
       };
@@ -37,7 +37,7 @@ describe('Responder', () => {
     });
 
     it('should catch an async error', async () => {
-      const { status, body, error } = await request(app).get('/helloAsync');
+      const { status, body } = await request(app).get('/helloAsync');
       expect(status).toEqual(500);
       expect(body).toEqual('Something went wrong! 💩💩');
     });

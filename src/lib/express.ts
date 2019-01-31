@@ -63,5 +63,5 @@ export interface BodyParserOptions {
 }
 
 export interface RedisOptions extends ClientOpts {
-  client?: RedisClient | any;
+  client?: RedisClient;
 }

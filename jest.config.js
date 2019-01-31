@@ -20,6 +20,12 @@ module.exports = {
     "\\.(ts|tsx)$": "ts-jest"
   },
   testRegex: "/tests/.*\\.(ts|tsx|js)$",
+  setupFilesAfterEnv: ["<rootDir>/tests/test.config.ts"],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    'tests/test.config',
+    'tests/assets'
+  ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
     'src/index.ts',
