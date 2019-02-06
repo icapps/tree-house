@@ -10,7 +10,7 @@ import * as path from 'path';
 export function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): void {
   try {
     const stats = fs.lstatSync(filePath);
-    let swaggerDocument;
+    let swaggerDocument: any;
 
     if (options.concatenate) {
       // Throw error if concatenate = true and filepath = file
@@ -25,7 +25,6 @@ export function setSwagger(app: Application, route: string, filePath: string, op
       if (stats.isFile()) {
         // Load yaml document
         swaggerDocument = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
-        Object.assign(swaggerDocument, options);
       }
       if (stats.isDirectory()) {
         throw new Error('To concatenate a folder of swagger YMLS, you need to explicitly set the boolean concatenate on true for the swaggerOptions');
@@ -34,10 +33,10 @@ export function setSwagger(app: Application, route: string, filePath: string, op
 
     // Bugfix to host multiple swagger definitions see:
     // https://github.com/scottie1984/swagger-ui-express/issues/92#issuecomment-454034754
-    const useSchema = schema => (...args) => swaggerUi.setup(schema)(...args);
+    const useSchema = (schema, options: SwaggerOptions) => (...args) => swaggerUi.setup(schema, options)(...args);
 
     // Serve the document served via swagger-ui
-    app.use(route, swaggerUi.serve, useSchema(swaggerDocument));
+    app.use(route, swaggerUi.serve, useSchema(swaggerDocument, options));
   } catch (e) {
     throw new Error(`Failed to load swagger documentation: ${e}`);
   }
