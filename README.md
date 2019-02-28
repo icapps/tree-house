@@ -128,7 +128,7 @@ treehouse.startServer(app, {
   port: 3000,
   title: 'My app',
   pre: preFn,       // function to execute before starting server (optional)
-  post: postFn,     // function to execute after starting server (optional)
+  post: postFn,     // function to execute after starting server (optional) - will contain the http server as first argument
   https: {          // optional
     port: 3001,
     privateKey: 'assets/ssl.key',
@@ -144,6 +144,7 @@ treehouse.startServer(app, {
 Serve Swagger UI via the a provided Swagger yaml file OR folder with valid structure and yaml files.
 
 ### YAML file implementation
+
 ```javascript
 const app = express();
 
@@ -158,6 +159,7 @@ treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
 ### Folder  implementation with valid structure
 
 Structure
+
 ```bash
 .
 ├── validFolderName
