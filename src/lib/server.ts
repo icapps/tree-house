@@ -22,7 +22,7 @@ export async function startServer(app: Application, options: ServerOptions): Pro
     }
 
     // Optional callback function
-    if (options.post) await postHook(options.post);
+    if (options.post) await postHook(options.post, httpServer);
   } catch (error) {
     console.error('An error occurred trying to start the server:\n', error.message);
     throw error;
@@ -32,7 +32,7 @@ export async function startServer(app: Application, options: ServerOptions): Pro
 /**
  * Execute a pre-hook function
  */
-export async function preHook(fn) {
+export async function preHook(fn: Function) {
   try {
     await fn();
   } catch (error) {
@@ -44,9 +44,9 @@ export async function preHook(fn) {
 /**
  * Execute a post-hook function
  */
-export async function postHook(fn) {
+export async function postHook(fn: Function, httpServer: http.Server) {
   try {
-    await fn();
+    await fn(httpServer);
   } catch (error) {
     console.error('Error trying to execute the post-hook function');
     throw error;
@@ -76,5 +76,5 @@ export interface ServerOptions {
     certificate: string;
   };
   pre?: Function;
-  post?: Function;
+  post?: (server: http.Server) => void | Promise<void>;
 }
