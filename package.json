@@ -21,6 +21,7 @@
     "build"
   ],
   "dependencies": {
+    "@types/throng": "^4.0.2",
     "body-parser": "~1.18.3",
     "cors": "~2.8.5",
     "express": "~4.16.4",
@@ -30,7 +31,8 @@
     "helmet": "~3.15.1",
     "https": "~1.0.0",
     "js-yaml": "~3.12.2",
-    "swagger-ui-express": "~4.0.2"
+    "swagger-ui-express": "~4.0.2",
+    "throng": "~4.0.0"
   },
   "devDependencies": {
     "@types/cors": "~2.8.4",

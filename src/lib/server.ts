@@ -1,4 +1,5 @@
 import { Application } from 'express';
+import * as throng from 'throng';
 import * as http from 'http';
 import * as https from 'https';
 import * as fs from 'fs';
@@ -7,6 +8,19 @@ import * as fs from 'fs';
  * Start an http/https server from the given Express instance
  */
 export async function startServer(app: Application, options: ServerOptions): Promise<void> {
+  const { clusterOptions } = options;
+  if (clusterOptions) {
+    throng({
+      start: () => startSingleCoreApplication(app, options),
+      workers: clusterOptions.numberOfWorkers,
+      lifetime: Infinity,
+    });
+  } else {
+    startSingleCoreApplication(app, options);
+  }
+}
+
+const startSingleCoreApplication = async (app: Application, options: ServerOptions) => {
   try {
     if (options.pre) await preHook(options.pre);
 
@@ -27,7 +41,7 @@ export async function startServer(app: Application, options: ServerOptions): Pro
     console.error('An error occurred trying to start the server:\n', error.message);
     throw error;
   }
-}
+};
 
 /**
  * Execute a pre-hook function
@@ -77,4 +91,8 @@ export interface ServerOptions {
   };
   pre?: Function;
   post?: (server: http.Server) => void | Promise<void>;
+  clusterOptions?: {
+    numberOfWorkers: throng.WorkerCount,
+    executePreFnOnlyOnce?: Boolean,
+  };
 }
