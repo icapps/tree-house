@@ -23,6 +23,9 @@ describe('Express', () => {
       expect(headers).toHaveProperty('x-download-options');
       expect(headers).toHaveProperty('strict-transport-security');
 
+      // Safari bugfix for sessions
+      expect(headers).toHaveProperty('credentials', 'include');
+
       // cors
       expect(headers).toHaveProperty('access-control-allow-origin');
     });

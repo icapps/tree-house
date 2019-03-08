@@ -13,6 +13,8 @@ const redisStore = require('express-brute-redis');
 export function setBasicSecurity(app: Application, route: string, options: SecurityOptions = {}): void {
   app.use(route, helmet(Object.assign({}, defaults.helmetOptions, options.helmet)));
   app.use(route, cors(Object.assign({}, defaults.corsOptions, options.cors)));
+  // SAFARI BUGFIX: include credentials
+  app.use((_req, res, next) => { res.set('credentials', 'include'); next(); });
 }
 
 /**
