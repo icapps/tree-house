@@ -14,7 +14,9 @@
     "test:watch": "jest --watchAll",
     "pretest": "npm run build",
     "prepare": "npm run build",
-    "release": "node_modules/np/source/cli.js --no-cleanup"
+    "release": "node_modules/np/source/cli.js --no-cleanup",
+    "git:clean": "git branch --merged | egrep -v \"(^\\*|master|staging|develop)\" | xargs git branch -d",
+    "git:clean-remote": "git remote prune origin"
   },
   "precommit": [
     "lint",
