@@ -23,13 +23,13 @@
     "build"
   ],
   "dependencies": {
-    "body-parser": "~1.18.3",
+    "body-parser": "~1.19.0",
     "cors": "~2.8.5",
-    "express": "~4.16.4",
+    "express": "~4.17.0",
     "express-brute": "~1.0.1",
     "express-brute-redis": "~0.0.1",
     "express-validation": "~1.0.2",
-    "helmet": "~3.16.0",
+    "helmet": "~3.17.0",
     "https": "~1.0.0",
     "js-yaml": "~3.13.0",
     "swagger-ui-express": "~4.0.2"
