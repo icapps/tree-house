@@ -1,11 +1,12 @@
-import { Application } from 'express';
+import { Application, RequestHandler } from 'express';
 import { ClientOpts, RedisClient } from 'redis';
-import * as ExpressBrute from 'express-brute';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as bodyParser from 'body-parser';
+import * as RateLimit from 'express-rate-limit';
+
 import * as defaults from '../config/app.config';
-const redisStore = require('express-brute-redis');
+const redisStore = require('rate-limit-redis');
 
 /**
  * Set some basic security measurements
@@ -33,22 +34,24 @@ export function setBodyParser(app: Application, route: string, options: BodyPars
  * Get a rate limiter instance
  * Current support for: built-in memory and Redis
  */
-export function getRateLimiter(options: RateLimiterOptions = {}): ExpressBrute {
-  let store: ExpressBrute.MemoryStore;
+export function getRateLimiter(options: RateLimiterOptions = {}): RequestHandler {
+  let store: RateLimit.Store;
   const allOptions = Object.assign({}, defaults.rateLimiterOptions, options);
 
+  // Automatically assign new redis store instance
   if (allOptions.redis) {
     store = new redisStore(allOptions.redis);
-  } else {
-    store = new ExpressBrute.MemoryStore();
   }
 
-  const { redis, ...bruteOptions } = allOptions; // Filter out unneeded properties
-  return new ExpressBrute(store, bruteOptions);
+  const { redis, ...rateOptions } = allOptions; // Filter out unneeded properties
+  return new RateLimit({
+    ...rateOptions,
+    store,
+  });
 }
 
 // Interfaces
-export interface RateLimiterOptions extends ExpressBrute.Options {
+export interface RateLimiterOptions extends RateLimit.Options {
   redis?: RedisOptions;
 }
 
