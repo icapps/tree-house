@@ -5,7 +5,8 @@ import { setBasicSecurity, setBodyParser, getRateLimiter } from '../../src';
 
 describe('Express', () => {
   describe('#setBasicSecurity', () => {
-    let app;
+    let app: express.Application;
+
     beforeEach(() => {
       app = express();
     });
@@ -32,7 +33,8 @@ describe('Express', () => {
   });
 
   describe('#setBodyParser', () => {
-    let app;
+    let app: express.Application;
+
     beforeEach(() => {
       app = express();
     });
@@ -61,7 +63,6 @@ describe('Express', () => {
       expect(headers).toHaveProperty('content-type');
     });
 
-
     it('app should have content-type header (urlEncoded)', async () => {
       setBodyParser(app, '/', { json: { limit: 500 } });
       app.use('/', (_req, res) => res.status(200).send(encodeURI('Welcome')));
@@ -80,20 +81,20 @@ describe('Express', () => {
   });
 
   describe('#getRateLimiter', () => {
-    let app;
+    let app: express.Application;
 
     beforeEach(() => {
       app = express();
     });
 
     it('set default rateLimiter', async () => {
-      const bruteForce = getRateLimiter();
-      app.use('/', bruteForce.prevent, (_req, res) => res.status(200).send('Welcome'));
+      const rateLimiter = getRateLimiter();
+      app.use('/', rateLimiter, (_req, res) => res.status(200).send('Welcome'));
     });
 
     it('rateLimiter should return 429 on too many tries', async () => {
-      const bruteForce = getRateLimiter({ minWait: 5000, freeRetries: 1 });
-      app.use('/', bruteForce.prevent, (_req, res) => res.status(200).send('Welcome'));
+      const rateLimiter = getRateLimiter({ max: 2 });
+      app.use('/', rateLimiter, (_req, res) => res.status(200).send('Welcome'));
 
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);
@@ -108,8 +109,8 @@ describe('Express', () => {
     it('rateLimiter with custom redisStore', async () => {
       const redisClient = redisMock.createClient();
 
-      const bruteForce = getRateLimiter({ redis: { client: redisClient } });
-      app.use('/', bruteForce.prevent, (_req, res) => res.status(200).send('Welcome'));
+      const rateLimiter = getRateLimiter({ redis: { client: redisClient } });
+      app.use('/', rateLimiter, (_req, res) => res.status(200).send('Welcome'));
 
       const { status } = await request(app).get('/');
       expect(status).toEqual(200);

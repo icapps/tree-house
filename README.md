@@ -69,32 +69,31 @@ treehouse.setBodyParser(app, '*', {
 ### getRateLimiter(options)
 
 Get a rate limiter instance to prevent brute force attacks. This can be used as a middleware in Express.
-At the moment there is support for a built in-memorystore or Redis. Both use the `express-brute` module.
+At the moment there is support for a built in-memorystore or Redis. Both use the `express-rate-limit` module.
 
 ```javascript
 const app = express();
 
 // In memory store (development purposes)
-const globalBruteforce = treehouse.getRateLimiter({
-  freeRetries: 1000,
-  attachResetToRequest: false,
-  refreshTimeoutOnRequest: false,
-  minWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time)
-  maxWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time)
-  lifetime: 24*60*60, // 1 day (seconds not milliseconds)
+const globalRateLimiter = treehouse.getRateLimiter({
+  max: 100, // limit each IP to 100 requests per windowMs
+  delayMs: 0 // disable delaying - full speed until the max limit is reached
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  message:
+    "Too many accounts created from this IP, please try again after an hour"
 });
 
-app.use('/login', globalBruteforce.prevent, ...);
+app.use('/login', globalRateLimiter, ...);
 
 // Using existing Redis client
 treehouse.getRateLimiter({
   redis: {
-    client: existingClient, // All Redis options or 'client' to use an existing client (see redis-express-brute)
+    client: existingClient, // All Redis options or 'client' to use an existing client (see rate-limit-redis)
   },
 });
 ```
 
-- [All available Express-brute options](https://github.com/AdamPflug/express-brute)
+- [All available Express-rate-limit options](https://github.com/nfriedly/express-rate-limit)
 - [All available Redis options](https://github.com/NodeRedis/node_redis)
 
 ## Responder
