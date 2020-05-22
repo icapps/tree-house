@@ -30,7 +30,7 @@
     "express-validation": "~1.0.2",
     "helmet": "~3.18.0",
     "https": "~1.0.0",
-    "js-yaml": "~3.13.1",
+    "js-yaml": "~3.14.0",
     "rate-limit-redis": "~1.6.0",
     "swagger-ui-express": "~4.0.6"
   },
