@@ -3,12 +3,14 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as SwaggerParser from '@apidevtools/swagger-parser';
 
 /**
  * Serve swagger documentation
  */
-export function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): void {
+export async function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): Promise<void> {
   try {
+    console.log('test');
     const stats = fs.lstatSync(filePath);
     let swaggerDocument: any;
 
@@ -27,9 +29,12 @@ export function setSwagger(app: Application, route: string, filePath: string, op
         swaggerDocument = yaml.load(fs.readFileSync(filePath, 'utf8'));
       }
       if (stats.isDirectory()) {
-        throw new Error('To concatenate a folder of swagger YMLS, you need to explicitly set the boolean concatenate on true for the swaggerOptions');
+        throw new Error('To concatenate a folder of swagger YAML files, you need to explicitly set the boolean concatenate to true in the swaggerOptions');
       }
     }
+
+    // Validate swagger doc
+    await SwaggerParser.validate(swaggerDocument);
 
     // Bugfix to host multiple swagger definitions see:
     // https://github.com/scottie1984/swagger-ui-express/issues/92#issuecomment-454034754
@@ -38,6 +43,7 @@ export function setSwagger(app: Application, route: string, filePath: string, op
     // Serve the document served via swagger-ui
     app.use(route, swaggerUi.serve, useSchema(swaggerDocument, options));
   } catch (e) {
+    console.error(JSON.stringify(e, null, 2));
     throw new Error(`Failed to load swagger documentation: ${e}`);
   }
 }

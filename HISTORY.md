@@ -24,6 +24,20 @@ All notable changes to this project will be documented in this file.
       }),
     };
   ```
+  
+  BREAKING CHANGE:
+
+  The setSwagger is now asynchronous and validates the swagger document before setting it.
+  
+  The setSwagger function before this version:
+  ```
+  setSwagger(app, '/documentation', './tests/assets/docs-v2-valid.yml');
+  ```
+
+  The setSwagger function in version 5.0.0:
+  ```
+  await setSwagger(app, '/documentation', './tests/assets/docs-v2-valid.yml');
+  ```
 
 ## [0.1.0] - 2017-05-03
 ### Added
