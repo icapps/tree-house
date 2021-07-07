@@ -3,14 +3,12 @@ import * as expressValidation from 'express-validation';
 /**
  * Validate a Joi schema via express-validation
  */
-export function validateSchema(schema, options = {}) {
+export function validateSchema(schema, options: expressValidation.EvOptions = {}) {
   return function (req, res, next) {
-    const allOptions = Object.assign({}, {
-      allowUnknownBody: false,
-      allowUnknownParams: false,
-    }, options);
-
-    expressValidation.options(allOptions);
-    expressValidation(schema)(req, res, next);
+    try {
+      expressValidation.validate(schema, options)(req, res, next);
+    } catch (err) {
+      throw err;
+    }
   };
 }
