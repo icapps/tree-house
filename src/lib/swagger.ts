@@ -10,7 +10,6 @@ import * as SwaggerParser from '@apidevtools/swagger-parser';
  */
 export async function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): Promise<void> {
   try {
-    console.log('test');
     const stats = fs.lstatSync(filePath);
     let swaggerDocument: any;
 
@@ -43,7 +42,6 @@ export async function setSwagger(app: Application, route: string, filePath: stri
     // Serve the document served via swagger-ui
     app.use(route, swaggerUi.serve, useSchema(swaggerDocument, options));
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2));
     throw new Error(`Failed to load swagger documentation: ${e}`);
   }
 }
