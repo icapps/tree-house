@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [5.0.0] - 2021-07-07
 ### Updated dependencies
-- Updated all dependencies
-  
-  BREAKING CHANGE:
+- Updated all dependencies 
+- BREAKING CHANGE: Bumped minimal node version to 10
+- BREAKING CHANGE: Joi schema required Joi.object() wrapper
   
   Validation schemas before this version:
   ```
