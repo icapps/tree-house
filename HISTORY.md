@@ -25,9 +25,7 @@ All notable changes to this project will be documented in this file.
     };
   ```
   
-  BREAKING CHANGE:
-
-  The setSwagger is now asynchronous and validates the swagger document before setting it.
+- BREAKING CHANGE: The setSwagger is now asynchronous and validates the swagger document before setting it.
   
   The setSwagger function before this version:
   ```
