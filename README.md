@@ -148,7 +148,7 @@ Serve Swagger UI via the a provided Swagger yaml file OR folder with valid struc
 ```javascript
 const app = express();
 
-treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
+await treehouse.setSwagger(app, '/documentation', 'documentation/swagger.yml', {
   host: 'localhost:3000',
   schemes: ['http'],
 };
@@ -192,9 +192,9 @@ Express middleware to validate a Joi schema using the `express-validation` modul
 
 ```javascript
 const schema =   {
-  body: {
+  body: Joi.object({
     name: Joi.string().required(),
-  }
+  })
 };
 
 app.post('/my-endpoint', treehouse.validateSchema(schema), ...);
