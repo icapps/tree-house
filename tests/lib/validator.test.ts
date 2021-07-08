@@ -2,21 +2,22 @@ import * as request from 'supertest';
 import * as express from 'express';
 import * as Joi from 'joi';
 import { validateSchema, setBodyParser } from '../../src';
+
 const app = express();
 
 describe('Validator', () => {
   describe('#validateSchema', () => {
     setBodyParser(app, '*'); // Needed for req.body
     const schema = {
-      body: {
+      body: Joi.object({
         name: Joi.string().required(),
-      },
+      }),
     };
 
     const respond = (_req, res) => res.status(200).send({});
     app.post('/validateTest', validateSchema(schema), respond);
 
-    it('Should succesfully validate schema', async () => {
+    it('Should successfully validate schema', async () => {
       const { status } = await request(app)
         .post('/validateTest')
         .send({ name: 'Brent' });

@@ -6,7 +6,10 @@ import * as bodyParser from 'body-parser';
 import * as RateLimit from 'express-rate-limit';
 
 import * as defaults from '../config/app.config';
+
 const redisStore = require('rate-limit-redis');
+
+type HelmetOptions = Parameters<typeof helmet>[0]; // https://github.com/helmetjs/helmet/issues/235
 
 /**
  * Set some basic security measurements
@@ -15,7 +18,10 @@ export function setBasicSecurity(app: Application, route: string, options: Secur
   app.use(route, helmet(Object.assign({}, defaults.helmetOptions, options.helmet)));
   app.use(route, cors(Object.assign({}, defaults.corsOptions, options.cors)));
   // SAFARI BUGFIX: include credentials
-  app.use((_req, res, next) => { res.set('credentials', 'include'); next(); });
+  app.use((_req, res, next) => {
+    res.set('credentials', 'include');
+    next();
+  });
 }
 
 /**
@@ -44,7 +50,7 @@ export function getRateLimiter(options: RateLimiterOptions = {}): RequestHandler
   }
 
   const { redis, ...rateOptions } = allOptions; // Filter out unneeded properties
-  return new RateLimit({
+  return RateLimit({
     ...rateOptions,
     store,
   });
@@ -57,7 +63,7 @@ export interface RateLimiterOptions extends RateLimit.Options {
 
 export interface SecurityOptions {
   cors?: cors.CorsOptions;
-  helmet?: helmet.IHelmetConfiguration;
+  helmet?: HelmetOptions;
 }
 
 export interface BodyParserOptions {
