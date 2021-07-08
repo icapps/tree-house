@@ -4,7 +4,7 @@ NodeJS utilities and handy helpers extending ExpressJS functionalities
 
 [![npm version](https://badge.fury.io/js/tree-house.svg)](https://badge.fury.io/js/tree-house)
 [![Dependencies](https://david-dm.org/icapps/tree-house.svg)](https://david-dm.org/icapps/tree-house.svg)
-[![Build Status](https://travis-ci.org/icapps/tree-house.svg?branch=master)](https://travis-ci.org/icapps/tree-house)
+[![Build Status](https://travis-ci.com/icapps/tree-house.svg?branch=master)](https://travis-ci.com/icapps/tree-house)
 [![Coverage Status](https://coveralls.io/repos/github/icapps/tree-house/badge.svg)](https://coveralls.io/github/icapps/tree-house) [![Greenkeeper badge](https://badges.greenkeeper.io/icapps/tree-house.svg)](https://greenkeeper.io/)
 
 ## Installation
