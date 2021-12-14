@@ -16,7 +16,13 @@ export async function startServer(app: Application, options: ServerOptions): Pro
 
     // HTTPS - Optional
     if (options.https) {
-      const httpsServer = https.createServer(getHttpsCredentials(options.https.certificate, options.https.privateKey), app);
+      const credentials = getHttpsCredentials(options.https.certificate, options.https.privateKey);
+      let httpsServer;
+      if (options.tlsSecurityOptions) {
+        httpsServer = https.createServer({ key: credentials.key, cert: credentials.cert, secureOptions: options.tlsSecurityOptions.tlsOptions }, app);
+      } else {
+        httpsServer = https.createServer(credentials, app);
+      }
       httpsServer.listen(options.https.port);
       console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
     }
@@ -77,4 +83,5 @@ export interface ServerOptions {
   };
   pre?: Function;
   post?: (server: http.Server) => void | Promise<void>;
+  tlsSecurityOptions?: {tlsOptions: number};
 }
