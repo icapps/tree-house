@@ -17,7 +17,9 @@ describe('Swagger', () => {
         await setSwagger(app, '/documentation', './tests/assets/docs-v2-invalid.yml');
       } catch (err) {
         expect(err).toBeInstanceOf(Error);
-        expect(err.message).toContain('Failed to load swagger documentation: MissingPointerError: Token "Category" does not exist.');
+        expect(err.message).toContain(
+          'Failed to load swagger documentation: MissingPointerError: Token "Category" does not exist.',
+        );
       }
     });
 
@@ -27,7 +29,9 @@ describe('Swagger', () => {
         await setSwagger(app, '/documentation', './tests/assets/docs-v2-invalid-2.yml');
       } catch (err) {
         expect(err).toBeInstanceOf(Error);
-        expect(err.message).toContain('Failed to load swagger documentation: SyntaxError: Swagger schema validation failed.');
+        expect(err.message).toContain(
+          'Failed to load swagger documentation: SyntaxError: Swagger schema validation failed.',
+        );
         expect(err.message).toContain('Additional properties not allowed: securityDefinitions at #/paths');
       }
     });
@@ -48,8 +52,10 @@ describe('Swagger', () => {
         await setSwagger(app, '/documentation', './tests/assets/docsFolder');
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
-        // tslint:disable-next-line:max-line-length
-        expect(error.message).toEqual('Failed to load swagger documentation: Error: To concatenate a folder of swagger YAML files, you need to explicitly set the boolean concatenate to true in the swaggerOptions');
+        // eslint:disable-next-line:max-line-length
+        expect(error.message).toEqual(
+          'Failed to load swagger documentation: Error: To concatenate a folder of swagger YAML files, you need to explicitly set the boolean concatenate to true in the swaggerOptions',
+        );
       }
     });
 
@@ -59,25 +65,29 @@ describe('Swagger', () => {
         await setSwagger(app, '/documentation', './tests/assets/docs-v2-valid.yml', { concatenate: true });
       } catch (err) {
         expect(err).toBeInstanceOf(Error);
-        // tslint:disable-next-line:max-line-length
-        expect(err.message).toEqual('Failed to load swagger documentation: Error: Boolean concatenate cannot be true when you specify a file. When you want to concatenate, specify a folder');
+        // eslint:disable-next-line:max-line-length
+        expect(err.message).toEqual(
+          'Failed to load swagger documentation: Error: Boolean concatenate cannot be true when you specify a file. When you want to concatenate, specify a folder',
+        );
       }
     });
 
     it('Should throw error when filepath is directory and directory contains no index.yml file', async () => {
       expect.assertions(2);
       try {
-        await setSwagger(app, '/documentation', './tests/assets/docsFolder', { concatenate : true });
+        await setSwagger(app, '/documentation', './tests/assets/docsFolder', { concatenate: true });
       } catch (err) {
         expect(err).toBeInstanceOf(Error);
-        expect(err.message).toContain('Could not read index.yml make sure the file is named: index.yml and in the correct folder');
+        expect(err.message).toContain(
+          'Could not read index.yml make sure the file is named: index.yml and in the correct folder',
+        );
       }
     });
 
     it('Should throw an error when docsFolder does not contain a routes folder', async () => {
       expect.assertions(2);
       try {
-        await setSwagger(app, '/documentation', './tests/assets/almostValidDocsFolder', { concatenate : true });
+        await setSwagger(app, '/documentation', './tests/assets/almostValidDocsFolder', { concatenate: true });
       } catch (err) {
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toContain('Error while reading routes folder. Make sure there is one!');
@@ -85,7 +95,7 @@ describe('Swagger', () => {
     });
 
     it('Should successfully create swagger documentation when filepath is a folder and resources are valid', async () => {
-      await setSwagger(app, '/documentation', './tests/assets/validDocsFolder', { concatenate : true });
+      await setSwagger(app, '/documentation', './tests/assets/validDocsFolder', { concatenate: true });
       const { status } = await request(app).get('/documentation');
       expect(status).toEqual(301);
     });

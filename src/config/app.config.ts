@@ -1,6 +1,6 @@
 /**
  * DEFAULTS
-*/
+ */
 
 // Helmet
 export const helmetOptions = {};

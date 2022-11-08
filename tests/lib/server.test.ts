@@ -35,7 +35,9 @@ describe('Initialise things before running application', () => {
     });
 
     test('should throw an error when error occurs in the provided pre-hook', async () => {
-      const mockFn = jest.fn(() => { throw new Error('myPreHookError'); });
+      const mockFn = jest.fn(() => {
+        throw new Error('myPreHookError');
+      });
       expect.assertions(2);
       try {
         await startServer(app, { port: 6001, pre: mockFn });
@@ -52,7 +54,9 @@ describe('Initialise things before running application', () => {
     });
 
     test('should throw an error when error occurs in the provided post-hook', async () => {
-      const mockFn = jest.fn(() => { throw new Error('myPostHookError'); });
+      const mockFn = jest.fn(() => {
+        throw new Error('myPostHookError');
+      });
       expect.assertions(2);
       try {
         await startServer(app, { port: 5005, post: mockFn });

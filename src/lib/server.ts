@@ -16,7 +16,10 @@ export async function startServer(app: Application, options: ServerOptions): Pro
 
     // HTTPS - Optional
     if (options.https) {
-      const httpsServer = https.createServer(getHttpsCredentials(options.https.certificate, options.https.privateKey), app);
+      const httpsServer = https.createServer(
+        getHttpsCredentials(options.https.certificate, options.https.privateKey),
+        app,
+      );
       httpsServer.listen(options.https.port);
       console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
     }
@@ -32,7 +35,7 @@ export async function startServer(app: Application, options: ServerOptions): Pro
 /**
  * Execute a pre-hook function
  */
-export async function preHook(fn: Function) {
+export async function preHook(fn: () => unknown | Promise<unknown>) {
   try {
     await fn();
   } catch (error) {
@@ -44,7 +47,7 @@ export async function preHook(fn: Function) {
 /**
  * Execute a post-hook function
  */
-export async function postHook(fn: Function, httpServer: http.Server) {
+export async function postHook(fn: (httpServer?: http.Server) => unknown | Promise<unknown>, httpServer: http.Server) {
   try {
     await fn(httpServer);
   } catch (error) {
@@ -57,7 +60,7 @@ export async function postHook(fn: Function, httpServer: http.Server) {
  * Get HTTPS credentials
  * Read out the private key and certificate
  */
-function getHttpsCredentials(certificate: string, privateKey: string): { key: string, cert: string } {
+function getHttpsCredentials(certificate: string, privateKey: string): { key: string; cert: string } {
   try {
     const key = fs.readFileSync(privateKey, 'utf8');
     const cert = fs.readFileSync(certificate, 'utf8');
@@ -75,6 +78,6 @@ export interface ServerOptions {
     privateKey: string;
     certificate: string;
   };
-  pre?: Function;
+  pre?: () => unknown | Promise<unknown>;
   post?: (server: http.Server) => void | Promise<void>;
 }
