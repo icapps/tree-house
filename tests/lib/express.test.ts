@@ -1,5 +1,6 @@
 import * as request from 'supertest';
 import * as express from 'express';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const redisMock = require('redis-mock');
 import { setBasicSecurity, setBodyParser, getRateLimiter } from '../../src';
 

@@ -8,7 +8,12 @@ import * as SwaggerParser from '@apidevtools/swagger-parser';
 /**
  * Serve swagger documentation
  */
-export async function setSwagger(app: Application, route: string, filePath: string, options: SwaggerOptions = {}): Promise<void> {
+export async function setSwagger(
+  app: Application,
+  route: string,
+  filePath: string,
+  options: SwaggerOptions = {},
+): Promise<void> {
   try {
     const stats = fs.lstatSync(filePath);
     let swaggerDocument: any;
@@ -16,7 +21,9 @@ export async function setSwagger(app: Application, route: string, filePath: stri
     if (options.concatenate) {
       // Throw error if concatenate = true and filepath = file
       if (stats.isFile()) {
-        throw new Error('Boolean concatenate cannot be true when you specify a file. When you want to concatenate, specify a folder');
+        throw new Error(
+          'Boolean concatenate cannot be true when you specify a file. When you want to concatenate, specify a folder',
+        );
       }
       if (stats.isDirectory()) {
         const swaggerContent = buildSwaggerDocumentFromFiles(filePath);
@@ -28,7 +35,9 @@ export async function setSwagger(app: Application, route: string, filePath: stri
         swaggerDocument = yaml.load(fs.readFileSync(filePath, 'utf8'));
       }
       if (stats.isDirectory()) {
-        throw new Error('To concatenate a folder of swagger YAML files, you need to explicitly set the boolean concatenate to true in the swaggerOptions');
+        throw new Error(
+          'To concatenate a folder of swagger YAML files, you need to explicitly set the boolean concatenate to true in the swaggerOptions',
+        );
       }
     }
 
@@ -37,7 +46,10 @@ export async function setSwagger(app: Application, route: string, filePath: stri
 
     // Bugfix to host multiple swagger definitions see:
     // https://github.com/scottie1984/swagger-ui-express/issues/92#issuecomment-454034754
-    const useSchema = (schema, options: SwaggerOptions) => (...args) => swaggerUi.setup(schema, options)(...args);
+    const useSchema =
+      (schema, options: SwaggerOptions) =>
+      (...args) =>
+        swaggerUi.setup(schema, options)(...args);
 
     // Serve the document served via swagger-ui
     app.use(route, swaggerUi.serve, useSchema(swaggerDocument, options));
@@ -52,7 +64,9 @@ function buildSwaggerDocumentFromFiles(filePath: string) {
     swaggerDocument += fs.readFileSync(path.join(filePath, 'index.yml'), 'utf8');
     swaggerDocument += 'paths: \n';
   } catch (error) {
-    throw new Error(`Could not read index.yml make sure the file is named: index.yml and in the correct folder ${error}`);
+    throw new Error(
+      `Could not read index.yml make sure the file is named: index.yml and in the correct folder ${error}`,
+    );
   }
 
   try {
@@ -77,7 +91,7 @@ export interface SwaggerOptions {
   basePath?: string;
   schemes?: string[];
   swaggerOptions?: {
-    validatorUrl?: string | null,
+    validatorUrl?: string | null;
   };
   concatenate?: boolean;
 }

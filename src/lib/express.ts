@@ -7,7 +7,7 @@ import * as RateLimit from 'express-rate-limit';
 
 import * as defaults from '../config/app.config';
 
-const redisStore = require('rate-limit-redis');
+import redisStore = require('rate-limit-redis');
 
 type HelmetOptions = Parameters<typeof helmet>[0]; // https://github.com/helmetjs/helmet/issues/235
 

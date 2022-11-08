@@ -18,25 +18,19 @@ describe('Validator', () => {
     app.post('/validateTest', validateSchema(schema), respond);
 
     it('Should successfully validate schema', async () => {
-      const { status } = await request(app)
-        .post('/validateTest')
-        .send({ name: 'Brent' });
+      const { status } = await request(app).post('/validateTest').send({ name: 'Brent' });
 
       expect(status).toEqual(200);
     });
 
     it('Should throw error when data is invalid', async () => {
-      const { status } = await request(app)
-        .post('/validateTest')
-        .send({ unknownProperty: 'Brent' });
+      const { status } = await request(app).post('/validateTest').send({ unknownProperty: 'Brent' });
 
       expect(status).toEqual(400);
     });
 
     it('Should throw error when data is not provided', async () => {
-      const { status } = await request(app)
-        .post('/validateTest')
-        .send({});
+      const { status } = await request(app).post('/validateTest').send({});
 
       expect(status).toEqual(400);
     });

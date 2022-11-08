@@ -28,9 +28,11 @@ describe('Responder', () => {
   describe('#handleAsyncFn', () => {
     beforeAll(() => {
       const fn = (_req, _res) => {
-        return new Promise((_resolve, reject) => setTimeout(() => {
-          reject(new Error('Something went wrong! 💩💩'));
-        }, 2000));
+        return new Promise((_resolve, reject) =>
+          setTimeout(() => {
+            reject(new Error('Something went wrong! 💩💩'));
+          }, 2000),
+        );
       };
 
       app.get('/helloAsync', responder.handleAsyncFn(fn));

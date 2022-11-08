@@ -15,7 +15,7 @@ npm-debug.log*
 tsconfig.json
 
 # Linter
-tslint.json
+.eslintrc.js
 
 # Testing and coverage
 test
