@@ -17,9 +17,18 @@ export async function startServer(app: Application, options: ServerOptions): Pro
     // HTTPS - Optional
     if (options.https) {
       const httpsServer = https.createServer(getHttpsCredentials(options.https.certificate, options.https.privateKey), app);
+
+      // Set headers timeout - Optional
+      if (options.headersTimeout) httpsServer.headersTimeout = options.headersTimeout;
+      if (options.keepAliveTimeout) httpsServer.keepAliveTimeout = options.keepAliveTimeout;
+
       httpsServer.listen(options.https.port);
       console.log(`${options.title || 'TreeHouse'} HTTPS NodeJS Server listening on port ${options.https.port}`);
     }
+
+    // Set headers timeout - Optional
+    if (options.headersTimeout) httpServer.headersTimeout = options.headersTimeout;
+    if (options.keepAliveTimeout) httpServer.keepAliveTimeout = options.keepAliveTimeout;
 
     // Optional callback function
     if (options.post) await postHook(options.post, httpServer);
@@ -75,6 +84,8 @@ export interface ServerOptions {
     privateKey: string;
     certificate: string;
   };
+  headersTimeout?: number;
+  keepAliveTimeout?: number;
   pre?: Function;
   post?: (server: http.Server) => void | Promise<void>;
 }
